@@ -1,4 +1,4 @@
-import TestComponent from './components/test';
+// import TestComponent from './components/test';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './scenes/Login';
 
@@ -11,6 +11,7 @@ function App() {
           <Route path="/" element={<Login />} />
         </Routes>
       </BrowserRouter>
+      {/* <TestComponent /> */}
     </div>
   );
 }
