@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './scenes/Login';
 import SignUp from './scenes/SignUp'
 import MyEvents from './scenes/MyEvents';
+import Auth from './components/test';
 
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/my-events" element={<MyEvents />} />
+          <Route path="/my-events" element={<Auth component = {MyEvents} />}/>
         </Routes>
       </BrowserRouter>
       {/* <TestComponent /> */}

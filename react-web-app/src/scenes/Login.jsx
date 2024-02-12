@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -15,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [logInError, setLogInError] = useState(false)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -33,12 +35,12 @@ export default function SignIn() {
         "password": data.get('password')
       })
     })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data)
-      const access = data.accessToken;
-      localStorage.setItem("accessToken", access);
-      navigate("/my-events");
+    .then(response => {
+      if (!response.ok) {
+        setLogInError(true);
+      } else {
+        navigate("/my-events");
+      }
     })
   };
 
@@ -61,7 +63,7 @@ export default function SignIn() {
           alignItems: 'center',
         }}
       >
-        <img src={logo} alt="logo" height={"150"} width={"150"} />
+        <img src={logo} alt="logo" height={"100"} width={"100"} />
       </Box>
       <Box
         sx={{

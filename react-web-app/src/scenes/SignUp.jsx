@@ -50,7 +50,7 @@ export default function SignUp() {
           alignItems: 'center',
         }}
       >
-        <img src={logo} alt="logo" height={"150"} width={"150"} />
+        <img src={logo} alt="logo" height={"100"} width={"100"} />
       </Box>
       <Box
         sx={{
