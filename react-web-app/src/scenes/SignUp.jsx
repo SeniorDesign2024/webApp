@@ -2,8 +2,6 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -45,7 +43,7 @@ export default function SignUp() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 2,
           width: "100%",
           display: 'flex',
           flexDirection: 'column',
@@ -131,13 +129,13 @@ export default function SignUp() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, fontFamily: "Open Sans" }}
           >
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/" variant="body2">
+              <Link href="/" variant="body2" sx={{ fontFamily: "Open Sans" }}>
                 Already have an account? Sign in
               </Link>
             </Grid>

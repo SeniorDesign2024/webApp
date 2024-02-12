@@ -2,6 +2,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './scenes/Login';
 import SignUp from './scenes/SignUp'
+import MyEvents from './scenes/MyEvents';
 
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/my-events" element={<MyEvents />} />
         </Routes>
       </BrowserRouter>
       {/* <TestComponent /> */}

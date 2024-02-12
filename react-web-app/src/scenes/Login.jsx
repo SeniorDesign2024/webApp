@@ -10,9 +10,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "../logo2.png"
+import { useNavigate } from 'react-router-dom';
 
 
 export default function SignIn() {
+  const navigate = useNavigate();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -35,6 +38,7 @@ export default function SignIn() {
       console.log(data)
       const access = data.accessToken;
       localStorage.setItem("accessToken", access);
+      navigate("/my-events");
     })
   };
 
@@ -50,7 +54,7 @@ export default function SignIn() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 2,
           width: "100%",
           display: 'flex',
           flexDirection: 'column',
