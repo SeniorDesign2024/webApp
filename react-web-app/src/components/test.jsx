@@ -23,7 +23,7 @@ export default class TestComponent extends Component {
 
   render() {
     // alert(this.state.isAuthenticated)
-    const { message, isMounted, isAuthenticated } = this.state;
+    const {isMounted, isAuthenticated } = this.state;
     return (
       <p>{isMounted ? (isAuthenticated ? <this.props.component /> : <Navigate to={"/"} />) : "Loading..."}</p>
     );

@@ -15,6 +15,77 @@ import Container from '@mui/material/Container';
 import logo from "../logo2.png"
 
 export default function MyEvents() {
+  const formatTime = (milliseconds) => {
+    // Converting milliseconds to readable time format HH:MM:SS
+    const seconds = Math.floor((milliseconds / 1000) % 60);
+    const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
+    const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
+    const formattedTime = [
+      hours.toString().padStart(2, "0"),
+      minutes.toString().padStart(2, "0"),
+      seconds.toString().padStart(2, "0")
+    ].join(":");
+
+    return formattedTime;
+  }
+
+  const formatDate = (date, month, year) => {
+    // Formatting Date
+    const months = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"];
+    
+    const formattedDate = months[month].toString() + " " + date.toString() + ", " + year.toString();
+
+    return formattedDate;
+  }
+
+  const MyEvents = [
+    {
+      name: "My Event 1",
+      startTime: new Date('2024-05-18T14:10:30.000+00:00'),
+      endTime: new Date('2024-05-18T15:10:30.000+00:00'),
+      userId: "1",
+      attendance: [10, 20, 30],
+      complianceLimit: 100
+    },
+
+    {
+      name: "My Event 2",
+      startTime: new Date('2024-05-19T14:10:30.000+00:00'),
+      endTime: new Date('2024-05-19T15:10:30.000+00:00'),
+      userId: "1",
+      attendance: [10, 20, 30, 40],
+      complianceLimit: 100
+    },
+
+    {
+      name: "My Event 3",
+      startTime: new Date('2024-05-20T14:10:30.000+00:00'),
+      endTime: new Date('2024-05-20T15:10:30.000+00:00'),
+      userId: "1",
+      attendance: [10, 20, 30, 40, 50],
+      complianceLimit: 100
+    },
+    
+    {
+      name: "My Event 4",
+      startTime: new Date('2024-05-21T18:10:30.000+00:00'),
+      endTime: new Date('2024-05-21T19:10:30.000+00:00'),
+      userId: "1",
+      attendance: [10, 20, 30, 40, 50, 60],
+      complianceLimit: 100
+    },
+
+    {
+      name: "My Event 5",
+      startTime: new Date('2024-05-22T14:10:30.000+00:00'),
+      endTime: new Date('2024-05-22T15:10:30.000+00:00'),
+      userId: "1",
+      attendance: [10, 20, 30, 40, 50, 60],
+      complianceLimit: 100
+    },
+  ];
+
   return (
     <Container
       component="main" 
@@ -58,18 +129,28 @@ export default function MyEvents() {
           alignItems: 'center',
         }}
       >
-        <List>
-          <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="List Item 1" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding>
-              <ListItemButton>
-                <ListItemText primary="List Item 2" />
-              </ListItemButton>
-            </ListItem>
-        </List>
+        {MyEvents && MyEvents.map(event => {
+          return (
+            <List>
+              <ListItem disablePadding>
+                <ListItemButton
+                  fullWidth
+                  sx={{
+                    bgcolor: '#3A0CA3',
+                    ':hover': {
+                      backgroundColor: "#E7CDE1"
+                    },
+                    borderRadius: 2,
+                  }}
+                >
+                  <ListItemText sx={{ color: "white", fontFamily: "Open Sans", ':hover': { color: "black" }}}> 
+                    {event.name}: {formatDate(event.startTime.getDate(), event.startTime.getMonth(), event.startTime.getFullYear())} @ {formatTime(event.startTime.getTime())}
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </List>
+          )
+        })}
       </Box>
     </Container>
   )
