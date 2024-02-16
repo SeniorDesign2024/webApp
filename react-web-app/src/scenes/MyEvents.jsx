@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -15,6 +16,56 @@ import Container from '@mui/material/Container';
 import logo from "../logo2.png"
 
 export default function MyEvents() {
+  const [events, setEvents] = useState([]);
+  const [dataReceived, setDataReceived] = useState(false);
+
+  async function fetchList() {
+    const response = await fetch(`/api/event/list-events`, {
+      method: "GET",
+      headers: {'Content-Type': 'application/json'},
+      credentials: "include"
+    });
+    setDataReceived(true);
+    return response.json();
+  }
+
+  useEffect(() => {
+    fetchList().then((data) => {
+      console.log(data);
+      for (let i = 0; i < data.data.length; i++) {
+        let date = new Date(data.data[i].startTime);
+        data.data[i].startTime = date;
+      }
+      setEvents(data.data);
+      // console.log(events);
+    })
+  }, [dataReceived]);
+
+  // useEffect(() => {
+  //   const fetchEventList = async () => {
+  //     try {
+  //       await fetch(`/api/event/list-events`, {
+  //         method: "GET",
+  //         headers: {'Content-Type': 'application/json'},
+  //         credentials: "include"
+  //       })
+  //       .then(response => {
+  //         if (!response.ok) {
+  //           console.log("Unable to fetch event list");
+  //         } else {
+  //           console.log(response.json());
+  //           setEvents(response.data);
+  //           console.log(events);
+  //         }
+  //       })
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   };
+
+  //   fetchEventList();
+  // });
+
   const formatTime = (milliseconds) => {
     // Converting milliseconds to readable time format HH:MM:SS
     const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -129,7 +180,7 @@ export default function MyEvents() {
           alignItems: 'center',
         }}
       >
-        {MyEvents && MyEvents.map(event => {
+        {events && events.map(event => {
           return (
             <List>
               <ListItem disablePadding>
