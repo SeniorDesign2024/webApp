@@ -4,16 +4,14 @@ import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "../logo2.png"
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function MyEvents() {
   const [events, setEvents] = useState([]);
@@ -41,30 +39,16 @@ export default function MyEvents() {
     })
   }, [dataReceived]);
 
-  // useEffect(() => {
-  //   const fetchEventList = async () => {
-  //     try {
-  //       await fetch(`/api/event/list-events`, {
-  //         method: "GET",
-  //         headers: {'Content-Type': 'application/json'},
-  //         credentials: "include"
-  //       })
-  //       .then(response => {
-  //         if (!response.ok) {
-  //           console.log("Unable to fetch event list");
-  //         } else {
-  //           console.log(response.json());
-  //           setEvents(response.data);
-  //           console.log(events);
-  //         }
-  //       })
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   };
-
-  //   fetchEventList();
-  // });
+  const handleRefresh = () => {
+    fetchList().then((data) => {
+      console.log(data);
+      for (let i = 0; i < data.data.length; i++) {
+        let date = new Date(data.data[i].startTime);
+        data.data[i].startTime = date;
+      }
+      setEvents(data.data);
+    });
+  };
 
   const formatTime = (milliseconds) => {
     // Converting milliseconds to readable time format HH:MM:SS
@@ -90,60 +74,14 @@ export default function MyEvents() {
     return formattedDate;
   }
 
-  const MyEvents = [
-    {
-      name: "My Event 1",
-      startTime: new Date('2024-05-18T14:10:30.000+00:00'),
-      endTime: new Date('2024-05-18T15:10:30.000+00:00'),
-      userId: "1",
-      attendance: [10, 20, 30],
-      complianceLimit: 100
-    },
-
-    {
-      name: "My Event 2",
-      startTime: new Date('2024-05-19T14:10:30.000+00:00'),
-      endTime: new Date('2024-05-19T15:10:30.000+00:00'),
-      userId: "1",
-      attendance: [10, 20, 30, 40],
-      complianceLimit: 100
-    },
-
-    {
-      name: "My Event 3",
-      startTime: new Date('2024-05-20T14:10:30.000+00:00'),
-      endTime: new Date('2024-05-20T15:10:30.000+00:00'),
-      userId: "1",
-      attendance: [10, 20, 30, 40, 50],
-      complianceLimit: 100
-    },
-    
-    {
-      name: "My Event 4",
-      startTime: new Date('2024-05-21T18:10:30.000+00:00'),
-      endTime: new Date('2024-05-21T19:10:30.000+00:00'),
-      userId: "1",
-      attendance: [10, 20, 30, 40, 50, 60],
-      complianceLimit: 100
-    },
-
-    {
-      name: "My Event 5",
-      startTime: new Date('2024-05-22T14:10:30.000+00:00'),
-      endTime: new Date('2024-05-22T15:10:30.000+00:00'),
-      userId: "1",
-      attendance: [10, 20, 30, 40, 50, 60],
-      complianceLimit: 100
-    },
-  ];
-
   return (
     <Container
-      component="main" 
-      maxWidth="md"
+      component="main"
+      maxWidth="lg"
       sx={{
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        height: '100vh',
       }}
     >
       <CssBaseline />
@@ -176,13 +114,68 @@ export default function MyEvents() {
           marginTop: 2,
           width: "100%",
           display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center', // Evenly space the buttons
+          alignItems: 'flex-end',
+        }}
+      >
+        <Button 
+          variant="contained" 
+          endIcon={<AddIcon />}
+          size="large"
+          sx={{
+            bgcolor: '#3A0CA3',
+            color: '#FFF', // Set the default text color
+            ':hover': {
+              backgroundColor: "#E7CDE1",
+              color: '#000', // Change text color to black on hover
+            },
+            borderRadius: 2,
+            textTransform: 'none',
+            marginRight: '16px',
+            width: '20%',
+            fontSize: '16px'
+          }}
+        >
+          Create Event
+        </Button>
+
+        <Button 
+          variant="contained" 
+          endIcon={<RefreshIcon />}
+          size="large"
+          onClick={handleRefresh}
+          sx={{
+            bgcolor: '#3A0CA3',
+            color: '#FFF', // Set the default text color
+            ':hover': {
+              backgroundColor: "#E7CDE1",
+              color: '#000', // Change text color to black on hover
+            },
+            borderRadius: 2,
+            textTransform: 'none',
+            marginLeft: '16px',
+            width: '20%',
+            fontSize: '16px'
+          }}
+        >
+          Refresh
+        </Button>
+      </Box>
+
+      <Box
+        sx={{
+          marginTop: 2,
+          width: "100%",
+          display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          overflowY: 'auto',
         }}
       >
         {events && events.map(event => {
           return (
-            <List>
+            <List key={event.id}> {/* Make sure to add a unique key prop */}
               <ListItem disablePadding>
                 <ListItemButton
                   fullWidth
@@ -191,7 +184,7 @@ export default function MyEvents() {
                     ':hover': {
                       backgroundColor: "#E7CDE1"
                     },
-                    borderRadius: 2,
+                    borderRadius: 2
                   }}
                 >
                   <ListItemText sx={{ color: "white", fontFamily: "Open Sans", ':hover': { color: "black" }}}> 
@@ -204,5 +197,5 @@ export default function MyEvents() {
         })}
       </Box>
     </Container>
-  )
+  )  
 }
