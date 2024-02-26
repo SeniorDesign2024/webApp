@@ -12,11 +12,12 @@ import Container from "@mui/material/Container";
 import logo from "../logo2.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 export default function MyEvents() {
   const [events, setEvents] = useState([]);
   const [dataReceived, setDataReceived] = useState(false);
+  const navigate = useNavigate();
 
   async function fetchList() {
     const response = await fetch(`/api/event/list-events`, {
@@ -198,6 +199,9 @@ export default function MyEvents() {
                 <ListItem disablePadding>
                   <ListItemButton
                     fullWidth
+                    onClick={() => {
+                      navigate("/event-details");
+                    }}
                     sx={{
                       bgcolor: "#3A0CA3",
                       ":hover": {
