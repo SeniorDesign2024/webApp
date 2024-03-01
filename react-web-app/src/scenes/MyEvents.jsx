@@ -12,7 +12,7 @@ import Container from "@mui/material/Container";
 import logo from "../logo2.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import AddIcon from "@mui/icons-material/Add";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function MyEvents() {
   const [events, setEvents] = useState([]);
@@ -141,10 +141,10 @@ export default function MyEvents() {
           component={Link}
           to="/event-creation"
           sx={{
-            bgcolor: "#3A0CA3",
+            bgcolor: "#FF7F50",
             color: "#FFF",
             ":hover": {
-              backgroundColor: "#E7CDE1",
+              backgroundColor: "#FFD580",
               color: "#000",
             },
             borderRadius: 2,

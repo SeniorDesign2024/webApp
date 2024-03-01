@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -16,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const [logInError, setLogInError] = useState(false)
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -37,7 +35,7 @@ export default function SignIn() {
     })
     .then(response => {
       if (!response.ok) {
-        setLogInError(true);
+        console.log(response.statusText)
       } else {
         navigate("/my-events");
       }

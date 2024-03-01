@@ -1,20 +1,48 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import logo from "../logo2.png";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import AddIcon from "@mui/icons-material/Add";
-import { Link } from "react-router-dom";
+import HomeIcon from '@mui/icons-material/Home';
+import Grid from '@mui/material/Grid';
+import { LineChart } from '@mui/x-charts/LineChart';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { useNavigate } from "react-router-dom";
 
 const EventDetails = () => {
+  const navigate = useNavigate();
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 50 },
+    {
+      field: 'timeStamps',
+      headerName: 'Timestamps',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'attendees',
+      headerName: 'Attendees',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'comments',
+      headerName: 'Comments',
+      width: 150,
+      editable: false,
+    },
+  ];
+
+  const rows = [
+    { id: 1, timeStamps: '10:00 AM', attendees: '20', comments: "" },
+    { id: 2, timeStamps: '10:15 AM', attendees: '60', comments: "" },
+    { id: 3, timeStamps: '10:30 AM', attendees: '95', comments: "" },
+    { id: 4, timeStamps: '10:45 AM', attendees: '80', comments: "" },
+    { id: 5, timeStamps: '11:00 AM', attendees: '40', comments: "" },
+  ];
+
   return (
     <Container
       component="main"
@@ -46,6 +74,103 @@ const EventDetails = () => {
         >
           Event Details
         </Typography>
+      </Box>
+      <Box
+        sx={{
+          marginTop: 3,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Grid 
+          container spacing={2}
+          sx={{
+            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+              color: "#3A0CA3",
+            },
+          }}
+        >
+          <Grid item xs={6}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            components={{ Toolbar: GridToolbar }}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
+              },
+            }}
+            sx={{
+              border: 0,
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
+          </Grid>
+          <Grid item xs={6} sx={{ display: 'flex' }}>
+            <LineChart
+              xAxis={[
+                { 
+                  label: "Timestamps (minutes)",
+                  data: [0, 15, 30, 45, 60]
+                }
+              ]}
+              series={[
+                {
+                  label: "Attendees",
+                  color: "#FF7F50",
+                  data: [20, 60, 95, 80, 40],
+                },
+              ]}
+              width={700}
+              height={400}
+              sx={{
+                '& .MuiLineElement-root': {
+                  strokeWidth: 4,
+                },
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
+      <Box
+        sx={{
+          marginTop: 3,
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Button
+          variant="contained"
+          size="large"
+          endIcon={<HomeIcon />}
+          onClick={() => {
+            navigate("/my-events")
+          }}
+          sx={{
+            bgcolor: "#3A0CA3",
+            color: "#FFF",
+            ":hover": {
+              backgroundColor: "#E7CDE1",
+              color: "#000",
+            },
+            borderRadius: 2,
+            textTransform: "none",
+            marginLeft: "16px",
+            width: "20%",
+            fontSize: "16px",
+            paddingBottom: "10px",
+          }}
+        >
+          HOME
+        </Button>
       </Box>
     </Container>
   )

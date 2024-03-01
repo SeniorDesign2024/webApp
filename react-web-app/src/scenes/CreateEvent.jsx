@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateEvent() {
   const navigate = useNavigate();
-  const [logInError, setLogInError] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (event) => {
@@ -100,7 +99,7 @@ export default function CreateEvent() {
       }),
     }).then((response) => {
       if (!response.ok) {
-        setLogInError(true);
+        console.log(response.statusText);
       } else {
         navigate("/my-events");
       }
