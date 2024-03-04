@@ -145,7 +145,7 @@ export default function CreateEvent() {
         >
           Create Event
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -155,8 +155,8 @@ export default function CreateEvent() {
             name="name"
             autoComplete="name"
             autoFocus
-            error={!!errors.name}
-            helperText={errors.name || " "}
+            // error={!!errors.name}
+            // helperText={errors.name || " "}
           />
           <TextField
             margin="normal"
@@ -165,8 +165,8 @@ export default function CreateEvent() {
             name="startTime"
             label="Start Time (MM/DD/YYYY, HH:MM AM/PM)"
             id="startTime"
-            error={!!errors.startTime}
-            helperText={errors.startTime || " "}
+            // error={!!errors.startTime}
+            // helperText={errors.startTime || " "}
           />
           <TextField
             margin="normal"
@@ -175,8 +175,8 @@ export default function CreateEvent() {
             name="endTime"
             label="End Time (MM/DD/YYYY, HH:MM AM/PM)"
             id="endTime"
-            error={!!errors.endTime}
-            helperText={errors.endTime || " "}
+            // error={!!errors.endTime}
+            // helperText={errors.endTime || " "}
           />
           <TextField
             margin="normal"
@@ -185,8 +185,8 @@ export default function CreateEvent() {
             name="attendance"
             label="Attendance (comma separated)"
             id="attendance"
-            error={!!errors.attendance}
-            helperText={errors.attendance || " "}
+            // error={!!errors.attendance}
+            // helperText={errors.attendance || " "}
           />
           <TextField
             margin="normal"
@@ -195,26 +195,52 @@ export default function CreateEvent() {
             name="complianceLimit"
             label="Compliance Limit"
             id="complianceLimit"
-            error={!!errors.complianceLimit}
-            helperText={errors.complianceLimit || " "}
+            // error={!!errors.complianceLimit}
+            // helperText={errors.complianceLimit || " "}
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2, fontFamily: "Open Sans" }}
-          >
-            Create Event
-          </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link
-                href="/my-events"
-                variant="body2"
-                sx={{ fontFamily: "Open Sans" }}
+          <Grid container>
+            <Grid item xs={6} display="flex" justifyContent={"center"}>
+              <Button
+                type="submit"
+                // fullWidth
+                variant="contained"
+                sx={{ 
+                  mt: 3, 
+                  mb: 2, 
+                  fontFamily: "Open Sans",
+                  backgroundColor: "#3A0CA3",
+                  color: "#FFF",
+                  ":hover": {
+                    backgroundColor: "#E7CDE1",
+                    color: "#000"
+                  }, 
+                }}
+              >
+                Create Event
+              </Button>
+            </Grid>
+            <Grid item xs={6} display="flex" justifyContent={"center"}>
+              <Button
+                type="submit"
+                // fullWidth
+                variant="contained"
+                onClick={() => {
+                  navigate("/my-events")
+                }}
+                sx={{ 
+                  mt: 3, 
+                  mb: 2, 
+                  fontFamily: "Open Sans",
+                  backgroundColor: "#3A0CA3",
+                  color: "#FFF",
+                  ":hover": {
+                    backgroundColor: "#E7CDE1",
+                    color: "#000"
+                  }, 
+                }}
               >
                 Cancel
-              </Link>
+              </Button>
             </Grid>
           </Grid>
         </Box>
