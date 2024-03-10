@@ -84,11 +84,11 @@ const EventDetails = () => {
     let count = 0;
 
     for (let i = 0; i < attendeesList.length; i++) {
-      if (i == 0) {
+      if (i === 0) {
         r.push(
           { id: i + 1, timeStamps: `${startTime.getHours()}:${startTime.getMinutes()}`, attendees: attendeesList[i], comments: "" }
         )
-      } else if (i == attendeesList.length - 1) {
+      } else if (i === attendeesList.length - 1) {
         r.push(
           { id: i + 1, timeStamps: `${endTime.getHours()}:${endTime.getMinutes()}`, attendees: attendeesList[i], comments: "" }
         )
