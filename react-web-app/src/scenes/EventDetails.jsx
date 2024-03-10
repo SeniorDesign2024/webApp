@@ -52,6 +52,7 @@ const EventDetails = () => {
 
   useEffect(() => {
     const fetchEventData = async () => {
+      console.log("fetching event details now!");
       try {
         const response = await fetch('/api/event/event-details', {
           method: "POST",
@@ -73,7 +74,7 @@ const EventDetails = () => {
       }
     }
     fetchEventData();
-  })
+  }, [])
 
   function populateTableRows(data) {
     const r = []
