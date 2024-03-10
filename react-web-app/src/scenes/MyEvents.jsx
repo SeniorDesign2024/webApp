@@ -25,19 +25,23 @@ export default function MyEvents() {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    setDataReceived(true);
-    return response.json();
+    if (response.ok) {
+      setDataReceived(true);
+      return response.json();
+    }
+    else {
+      setDataReceived(false);
+      return null;
+    }
   }
 
   useEffect(() => {
     fetchList().then((data) => {
-      console.log(data);
       for (let i = 0; i < data.data.length; i++) {
         let date = new Date(data.data[i].startTime);
         data.data[i].startTime = date;
       }
       setEvents(data.data);
-      // console.log(events);
     });
   }, [dataReceived]);
 
@@ -120,7 +124,7 @@ export default function MyEvents() {
         >
           My Events
         </Typography>
-        <Typography component="p" sx={{ mt: 1, fontFamily: "Open Sans" }}>
+        <Typography sx={{ mt: 1, fontFamily: "Open Sans" }}>
           List of all you upcoming events!
         </Typography>
       </Box>
@@ -193,14 +197,14 @@ export default function MyEvents() {
         {events &&
           events.map((event) => {
             return (
-              <List key={event.id}>
+              <List key={event.eventId}>
                 {" "}
                 {/* Make sure to add a unique key prop */}
                 <ListItem disablePadding>
                   <ListItemButton
-                    fullWidth
+                    // fullWidth
                     onClick={() => {
-                      navigate("/event-details");
+                      navigate(`/event-details/${event.eventId}`);
                     }}
                     sx={{
                       bgcolor: "#3A0CA3",
