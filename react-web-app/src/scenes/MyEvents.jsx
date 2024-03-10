@@ -227,7 +227,7 @@ export default function MyEvents() {
                         event.startTime.getMonth(),
                         event.startTime.getFullYear()
                       )}{" "}
-                      @ {formatTime(event.startTime.getTime())}
+                      @ {event.startTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
                     </ListItemText>
                   </ListItemButton>
                 </ListItem>

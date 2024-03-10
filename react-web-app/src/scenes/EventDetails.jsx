@@ -40,19 +40,8 @@ const EventDetails = () => {
     },
   ];
 
-  // const rows = [
-  //   { id: 1, timeStamps: '10:00 AM', attendees: '20', comments: "" },
-  //   { id: 2, timeStamps: '10:15 AM', attendees: '60', comments: "" },
-  //   { id: 3, timeStamps: '10:30 AM', attendees: '95', comments: "" },
-  //   { id: 4, timeStamps: '10:45 AM', attendees: '80', comments: "" },
-  //   { id: 5, timeStamps: '11:00 AM', attendees: '40', comments: "" },
-  // ];
-
-  
-
   useEffect(() => {
     const fetchEventData = async () => {
-      console.log("fetching event details now!");
       try {
         const response = await fetch('/api/event/event-details', {
           method: "POST",
@@ -68,39 +57,67 @@ const EventDetails = () => {
         }
   
         const data  = await response.json()
+        setAttendeesList(data.attendance)
         populateTableRows(data)
       } catch (err) {
         console.log(err)
       }
     }
     fetchEventData();
-  }, [])
-
+  }, [ eventId ])
+    
   function populateTableRows(data) {
-    const r = []
-    setAttendeesList(data.attendance)
+    const trows = [];
     let startTime = new Date(data.startTime);
     let endTime = new Date(data.endTime);
-    let count = 0;
-
-    for (let i = 0; i < attendeesList.length; i++) {
-      if (i === 0) {
-        r.push(
-          { id: i + 1, timeStamps: `${startTime.getHours()}:${startTime.getMinutes()}`, attendees: attendeesList[i], comments: "" }
-        )
-      } else if (i === attendeesList.length - 1) {
-        r.push(
-          { id: i + 1, timeStamps: `${endTime.getHours()}:${endTime.getMinutes()}`, attendees: attendeesList[i], comments: "" }
-        )
-      } else {
-        r.push(
-          { id: i + 1, timeStamps: `${startTime.getHours()}:${count + timeInterval}`, attendees: attendeesList[i], comments: "" }
-        )
-        count += timeInterval;
-      }
+    let currentTime = new Date(startTime);
+  
+    // Set the time interval to 10 seconds
+    const timeInterval = 10;
+  
+    // Loop until currentTime reaches endTime
+    while (currentTime <= endTime) {
+      // Format the current time and add it to the rows
+      let timeStamps = currentTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: false });
+      trows.push({
+        id: trows.length + 1,
+        timeStamps: timeStamps,
+        attendees: "", // Assuming no attendees for now
+        comments: "",
+      });
+  
+      // Increment currentTime by the time interval (in seconds)
+      currentTime.setSeconds(currentTime.getSeconds() + timeInterval);
     }
-    setRows(r)
+  
+    setRows(trows);
   }
+
+  // function populateTableRows(data) {
+  //   const trows = []
+  //   setAttendeesList(data.attendance)
+  //   let startTime = new Date(data.startTime);
+  //   let endTime = new Date(data.endTime);
+  //   let count = 0;
+
+  //   for (let i = 0; i < data.attendance.length; i++) {
+  //     if (i === 0) {
+  //       trows.push(
+  //         { id: i + 1, timeStamps: `${startTime.getHours()}:${startTime.getMinutes().toString().padStart(2, '0')} = ${startTime.getTimezoneOffset()}`, attendees: data.attendance[i], comments: "" }
+  //       )
+  //     } else if (i === data.attendance.length - 1) {
+  //       trows.push(
+  //         { id: i + 1, timeStamps: `${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`, attendees: data.attendance[i], comments: "" }
+  //       )
+  //     } else {
+  //       trows.push(
+  //         { id: i + 1, timeStamps: `${startTime.getHours()}:${count + timeInterval}`, attendees: data.attendance[i], comments: "" }
+  //       )
+  //       count += timeInterval;
+  //     }
+  //   }
+  //   setRows(trows)
+  // }
 
   return (
     <Container
