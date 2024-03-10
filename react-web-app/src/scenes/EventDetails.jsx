@@ -15,8 +15,6 @@ const EventDetails = () => {
   const eventId = useParams();
   const [attendeesList, setAttendeesList] = useState([]);
   const [rows, setRows] = useState([])
-
-  const timeInterval = 10;
   const navigate = useNavigate();
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
@@ -124,6 +122,7 @@ const EventDetails = () => {
       component="main"
       maxWidth="lg"
       sx={{
+        my: 2,
         display: "flex",
         flexDirection: "column",
         height: "100vh",
@@ -132,7 +131,7 @@ const EventDetails = () => {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 2,
+          my: 2,
           width: "100%",
           display: "flex",
           flexDirection: "column",
@@ -144,7 +143,7 @@ const EventDetails = () => {
           component="h1"
           variant="h5"
           sx={{
-            mt: 2,
+            my: 2,
             fontFamily: "Open Sans",
           }}
         >
@@ -194,6 +193,7 @@ const EventDetails = () => {
                 { 
                   label: "Timestamps (minutes)",
                   data: [0, 10, 20, 30, 40, 50, 60]
+                  // data: timestamps
                 }
               ]}
               series={[
