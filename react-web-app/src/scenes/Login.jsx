@@ -91,6 +91,13 @@ export default function SignIn() {
             name="username"
             autoComplete="username"
             autoFocus
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                },
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -101,9 +108,26 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                },
+              },
+            }}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={
+              <Checkbox 
+                value="remember" 
+                color="primary"
+                sx={{
+                  '&.Mui-checked': {
+                    color: '#3A0CA3', // Set the checkmark (and the border when checked) to the desired color
+                  },
+                }}
+              />
+            }
             label={<Typography variant="body2" sx={{ fontFamily: "Open Sans" }}>Remember me</Typography>}
           />
           <Button
@@ -126,13 +150,33 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2" sx={{ fontFamily: "Open Sans" }}>
+              <Link 
+                href="#" 
+                variant="body2" 
+                sx={{ 
+                  fontFamily: "Open Sans", 
+                  color: '#3A0CA3', // Apply the Sign In button's background color
+                  '&:hover': {
+                    textDecoration: 'underline', // Optional: Change on hover if desired
+                  }
+                }}
+              >
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2" sx={{ fontFamily: "Open Sans" }}>
-                {"Don't have an account? Sign Up"}
+              <Link 
+                href="/signup" 
+                variant="body2" 
+                sx={{ 
+                  fontFamily: "Open Sans", 
+                  color: '#3A0CA3', // Apply the Sign In button's background color
+                  '&:hover': {
+                    textDecoration: 'underline', // Optional: Change on hover if desired
+                  }
+                }}
+              >
+                Don't have an account? Sign Up
               </Link>
             </Grid>
           </Grid>

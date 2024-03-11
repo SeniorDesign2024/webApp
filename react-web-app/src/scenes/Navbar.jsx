@@ -1,20 +1,106 @@
-import { useState } from "react";
-import useMediaQuery from "../hooks/useMediaQuery";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { TbHome } from "react-icons/tb";
+import { CgProfile } from "react-icons/cg";
+import { TbLogout } from "react-icons/tb";
+import { useNavigate, useLocation } from "react-router-dom"
 import logo from "../logo2.png";
 
 const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
-  const [isMenuToggled, setIsMenuToggled] = useState(false);
-  const isAboveSmallScreens = useMediaQuery("(min-width: 768px)");
-  const navbarBackground = isTopOfPage ? "bg-light-purple" : "";
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    fetch(`/api/auth/logout`, {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      credentials: "include",
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.log(response.statusText)
+      } else {
+        navigate("/");
+      }
+    })
+  }
 
   return (
-    <nav className={`${navbarBackground} z-40 w-full fixed top-0 py-6`}>
-      <div className="flex items-center justify-between mx-auto w-5/6">
-        <div className="justify-center">
-          <img src={logo} alt="logo" />
-        </div>
-      </div>
-    </nav>
+    <Box
+      sx={{
+        width: "100%",
+        my: 1,
+        py: 1,
+        px: 1,
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "row",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "Center",
+        }}
+      >
+        <img src={logo} alt="logo" height={"100"} width={"100"} />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        {location.pathname !== '/my-events' && (<Button
+          onClick={() => navigate("/my-events")}
+          sx={{
+            width: "50px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            ":hover": {
+              backgroundColor: "rgba(58,12,163, 0.04)"
+            }
+          }}
+        >
+          <TbHome size={30} color="#3A0CA3" />
+        </Button>)}
+
+        <Button
+          sx={{
+            width: "50px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            ":hover": {
+              backgroundColor: "rgba(58,12,163, 0.04)"
+            }
+          }}
+        >
+          <CgProfile size={30} color="#3A0CA3" />
+        </Button>
+        
+        <Button
+          onClick={() => handleLogout() }
+          sx={{
+            width: "50px",
+            height: "50px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            ":hover": {
+              backgroundColor: "rgba(58,12,163, 0.04)"
+            }
+          }}
+        >
+          <TbLogout size={30} color="#3A0CA3" />
+        </Button>
+      </Box>
+    </Box>
   )
 }
 

@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import logo from "../logo2.png";
-import HomeIcon from '@mui/icons-material/Home';
 import Grid from '@mui/material/Grid';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const EventDetails = () => {
   const eventId = useParams();
+  const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [rows, setRows] = useState([])
-  const navigate = useNavigate();
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
@@ -55,6 +53,7 @@ const EventDetails = () => {
         }
   
         const data  = await response.json()
+        setEventData(data)
         setAttendeesList(data.attendance)
         populateTableRows(data)
       } catch (err) {
@@ -76,7 +75,7 @@ const EventDetails = () => {
     // Loop until currentTime reaches endTime
     while (currentTime <= endTime) {
       // Format the current time and add it to the rows
-      let timeStamps = currentTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: false });
+      let timeStamps = currentTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true });
       trows.push({
         id: trows.length + 1,
         timeStamps: timeStamps,
@@ -122,34 +121,31 @@ const EventDetails = () => {
       component="main"
       maxWidth="lg"
       sx={{
-        my: 2,
         display: "flex",
         flexDirection: "column",
         height: "100vh",
       }}
     >
       <CssBaseline />
-      <Box
-        sx={{
-          my: 2,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={logo} alt="logo" height={"100"} width={"100"} />
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{
-            my: 2,
-            fontFamily: "Open Sans",
-          }}
-        >
-          Event Details
-        </Typography>
-      </Box>
+      <Navbar />
+      <Grid container>
+        <Grid item xs={6} sx={{ px: 1, py: 1}}>
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{ my: 1, fontFamily: "Open Sans" }}
+          >
+            Event Details
+          </Typography>
+          <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
+            Details about {eventData.name}
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+
+        </Grid>
+      </Grid>
+      
       <Box
         sx={{
           marginTop: 3,
@@ -193,7 +189,6 @@ const EventDetails = () => {
                 { 
                   label: "Timestamps (minutes)",
                   data: [0, 10, 20, 30, 40, 50, 60]
-                  // data: timestamps
                 }
               ]}
               series={[
@@ -213,40 +208,6 @@ const EventDetails = () => {
             />
           </Grid>
         </Grid>
-      </Box>
-      <Box
-        sx={{
-          marginTop: 3,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          variant="contained"
-          size="large"
-          endIcon={<HomeIcon />}
-          onClick={() => {
-            navigate("/my-events")
-          }}
-          sx={{
-            bgcolor: "#3A0CA3",
-            color: "#FFF",
-            ":hover": {
-              backgroundColor: "#E7CDE1",
-              color: "#000",
-            },
-            borderRadius: 2,
-            textTransform: "none",
-            marginLeft: "16px",
-            width: "20%",
-            fontSize: "16px",
-            paddingBottom: "10px",
-          }}
-        >
-          HOME
-        </Button>
       </Box>
     </Container>
   )

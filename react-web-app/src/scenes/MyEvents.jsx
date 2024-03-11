@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
+import { Grid } from "@mui/material";
 import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -9,10 +10,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import logo from "../logo2.png";
-import RefreshIcon from "@mui/icons-material/Refresh";
-import AddIcon from "@mui/icons-material/Add";
+import { TbPlus } from "react-icons/tb";
+import { TbRefresh } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 export default function MyEvents() {
   const [events, setEvents] = useState([]);
@@ -104,86 +105,72 @@ export default function MyEvents() {
       }}
     >
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 2,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <img src={logo} alt="logo" height={"100"} width={"100"} />
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{
-            mt: 2,
-            fontFamily: "Open Sans",
-          }}
-        >
-          My Events
-        </Typography>
-        <Typography sx={{ mt: 1, fontFamily: "Open Sans" }}>
-          List of all you upcoming events!
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          marginTop: 2,
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "flex-end",
-        }}
-      >
-        <Button
-          variant="contained"
-          endIcon={<AddIcon />}
-          size="large"
-          component={Link}
-          to="/event-creation"
-          sx={{
-            bgcolor: "#FF7F50",
-            color: "#FFF",
-            ":hover": {
-              backgroundColor: "#FFD580",
-              color: "#000",
-            },
-            borderRadius: 2,
-            textTransform: "none",
-            marginRight: "16px",
-            width: "20%",
-            fontSize: "16px",
-          }}
-        >
-          Create Event
-        </Button>
+      <Navbar />
+      <Grid container>
+        <Grid item xs={6} sx={{ px: 1, py: 1}}>
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{
+              my: 1,
+              fontFamily: "Open Sans",
+            }}
+          >
+            My Events
+          </Typography>
+          <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
+            List of all you upcoming events!
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ pl: 28, display: "flex", alignItems: "center" }}>
+          <Box sx={{ ml: 'auto', display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              component={Link}
+              to="/event-creation"
+              endIcon={<TbPlus size={30} color="#FF7F50" />}
+              sx={{
+                minWidth: 'auto',
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "#FF7F50",
+                border: "2px solid #FF7F50",
+                borderRadius: 2,
+                padding: "10px",
+                ":hover": {
+                  border: "2px solid #FF7F50",
+                  backgroundColor: "rgba(255,127,80, 0.04)"
+                }
+              }}
+            >
+              Create Event
+            </Button>
 
-        <Button
-          variant="contained"
-          endIcon={<RefreshIcon />}
-          size="large"
-          onClick={handleRefresh}
-          sx={{
-            bgcolor: "#3A0CA3",
-            color: "#FFF", // Set the default text color
-            ":hover": {
-              backgroundColor: "#E7CDE1",
-              color: "#000", // Change text color to black on hover
-            },
-            borderRadius: 2,
-            textTransform: "none",
-            marginLeft: "16px",
-            width: "20%",
-            fontSize: "16px",
-          }}
-        >
-          Refresh
-        </Button>
-      </Box>
-
+            <Button
+              variant="outlined"
+              onClick={() => handleRefresh()}
+              endIcon={<TbRefresh size={30} color="#3A0CA3" />}
+              sx={{
+                minWidth: 'auto',
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "#3A0CA3",
+                border: "2px solid #3A0CA3",
+                borderRadius: 2,
+                padding: '10px',
+                ":hover": {
+                  border: "2px solid #3A0CA3",
+                  backgroundColor: "rgba(58,12,163, 0.04)"
+                }
+              }}
+            >
+              Refresh
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
       <Box
         sx={{
           marginTop: 2,
@@ -198,27 +185,28 @@ export default function MyEvents() {
           events.map((event) => {
             return (
               <List key={event.eventId}>
-                {" "}
-                {/* Make sure to add a unique key prop */}
                 <ListItem disablePadding>
                   <ListItemButton
-                    // fullWidth
                     onClick={() => {
                       navigate(`/event-details/${event.eventId}`);
                     }}
                     sx={{
-                      bgcolor: "#3A0CA3",
+                      width: "100%",
+                      minHeight: "48px",
+                      justifyContent: "flex-start",
+                      border: "1px solid #3A0CA3", // Outline color
                       ":hover": {
-                        backgroundColor: "#E7CDE1",
+                        backgroundColor: "rgba(58,12,163, 0.04)",
+                        borderColor: "1px solid #3A0CA3", // Keeps the border color consistent on hover, or choose a different color
                       },
                       borderRadius: 2,
                     }}
                   >
                     <ListItemText
                       sx={{
-                        color: "white",
+                        color: "#3A0CA3", // Changing text color to match the outline for consistency
                         fontFamily: "Open Sans",
-                        ":hover": { color: "black" },
+                        ":hover": { color: "black" }, // Adjust hover color as needed
                       }}
                     >
                       {event.name}:{" "}
@@ -227,7 +215,7 @@ export default function MyEvents() {
                         event.startTime.getMonth(),
                         event.startTime.getFullYear()
                       )}{" "}
-                      @ {event.startTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
+                      @ {formatTime(event.startTime)}
                     </ListItemText>
                   </ListItemButton>
                 </ListItem>
