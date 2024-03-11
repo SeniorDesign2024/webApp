@@ -145,7 +145,7 @@ export default function CreateEvent() {
           alignItems: "center",
         }}
       >
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%", px: 1, py: 1 }}>
           <TextField
             margin="normal"
             required

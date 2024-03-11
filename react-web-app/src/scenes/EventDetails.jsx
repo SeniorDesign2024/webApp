@@ -68,7 +68,14 @@ const EventDetails = () => {
         console.log(err)
       }
     }
+
     fetchEventData();
+
+    const interval = setInterval(() => {
+      fetchEventData();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, [ eventId ])
     
   function populateTableRows(data) {
@@ -97,32 +104,6 @@ const EventDetails = () => {
   
     setRows(trows);
   }
-
-  // function populateTableRows(data) {
-  //   const trows = []
-  //   setAttendeesList(data.attendance)
-  //   let startTime = new Date(data.startTime);
-  //   let endTime = new Date(data.endTime);
-  //   let count = 0;
-
-  //   for (let i = 0; i < data.attendance.length; i++) {
-  //     if (i === 0) {
-  //       trows.push(
-  //         { id: i + 1, timeStamps: `${startTime.getHours()}:${startTime.getMinutes().toString().padStart(2, '0')} = ${startTime.getTimezoneOffset()}`, attendees: data.attendance[i], comments: "" }
-  //       )
-  //     } else if (i === data.attendance.length - 1) {
-  //       trows.push(
-  //         { id: i + 1, timeStamps: `${endTime.getHours()}:${endTime.getMinutes().toString().padStart(2, '0')}`, attendees: data.attendance[i], comments: "" }
-  //       )
-  //     } else {
-  //       trows.push(
-  //         { id: i + 1, timeStamps: `${startTime.getHours()}:${count + timeInterval}`, attendees: data.attendance[i], comments: "" }
-  //       )
-  //       count += timeInterval;
-  //     }
-  //   }
-  //   setRows(trows)
-  // }
 
   return (
     <Container
@@ -205,7 +186,7 @@ const EventDetails = () => {
             <LineChart
               xAxis={[
                 { 
-                  label: "Timestamps (minutes)",
+                  label: "Time (seconds)",
                   // data: [0, 10, 20, 30, 40, 50, 60]
                   data: intervalList
                 }
