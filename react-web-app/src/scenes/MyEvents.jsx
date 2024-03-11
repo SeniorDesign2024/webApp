@@ -138,6 +138,7 @@ export default function MyEvents() {
                 border: "2px solid #FF7F50",
                 borderRadius: 2,
                 padding: "10px",
+                fontFamily: "Open Sans",
                 ":hover": {
                   border: "2px solid #FF7F50",
                   backgroundColor: "rgba(255,127,80, 0.04)"

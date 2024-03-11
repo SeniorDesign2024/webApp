@@ -13,6 +13,7 @@ const EventDetails = () => {
   const eventId = useParams();
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
+  const [intervalList, setIntervalList] = useState([]);
   const [rows, setRows] = useState([])
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
@@ -56,6 +57,13 @@ const EventDetails = () => {
         setEventData(data)
         setAttendeesList(data.attendance)
         populateTableRows(data)
+
+        const l = []
+        for (let i = 0; i < data.attendance.length; i++) {
+          l.push(i*10)
+        }
+        setIntervalList(l)
+
       } catch (err) {
         console.log(err)
       }
@@ -128,24 +136,34 @@ const EventDetails = () => {
     >
       <CssBaseline />
       <Navbar />
+      <Box sx={{ px: 1, py: 1}}>
+        <Typography
+          component="h1"
+          variant="h5"
+          sx={{ my: 1, fontFamily: "Open Sans" }}
+        >
+          Event Details
+        </Typography>
+      </Box>
       <Grid container>
         <Grid item xs={6} sx={{ px: 1, py: 1}}>
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{ my: 1, fontFamily: "Open Sans" }}
-          >
-            Event Details
-          </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
-            Details about {eventData.name}
+            Event Name: {eventData.name}
+          </Typography>
+          <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
+            Compliance Limit: {eventData.complianceLimit}
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
-
+          <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
+            Start Time: {new Date(eventData.startTime).toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
+          </Typography>
+          <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
+            End Time: {new Date(eventData.endTime).toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
+          </Typography>
         </Grid>
       </Grid>
-      
+
       <Box
         sx={{
           marginTop: 3,
@@ -188,7 +206,8 @@ const EventDetails = () => {
               xAxis={[
                 { 
                   label: "Timestamps (minutes)",
-                  data: [0, 10, 20, 30, 40, 50, 60]
+                  // data: [0, 10, 20, 30, 40, 50, 60]
+                  data: intervalList
                 }
               ]}
               series={[

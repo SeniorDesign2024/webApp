@@ -3,13 +3,14 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import logo from "../logo2.png";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import { TbPlus } from "react-icons/tb";
+import { TbX } from "react-icons/tb";
 
 export default function CreateEvent() {
   const navigate = useNavigate();
@@ -109,42 +110,41 @@ export default function CreateEvent() {
   return (
     <Container
       component="main"
-      maxWidth="xs"
+      maxWidth="lg"
       sx={{
         display: "flex",
         flexDirection: "column",
+        height: "100vh",
       }}
     >
       <CssBaseline />
+      <Navbar />
+      <Grid container>
+        <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+          <Typography
+            component="h1"
+            variant="h5"
+            sx={{
+              my: 1,
+              fontFamily: "Open Sans",
+            }}
+          >
+            Create Event
+          </Typography>
+          <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
+            Fill out the form to create an event!
+          </Typography>
+        </Grid>
+      </Grid>
       <Box
         sx={{
-          marginTop: 2,
+          py: 2,
           width: "100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <img src={logo} alt="logo" height={"100"} width={"100"} />
-      </Box>
-      <Box
-        sx={{
-          marginTop: 8,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          component="h1"
-          variant="h4"
-          sx={{
-            fontFamily: "Open Sans",
-          }}
-        >
-          Create Event
-        </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -157,6 +157,13 @@ export default function CreateEvent() {
             autoFocus
             // error={!!errors.name}
             // helperText={errors.name || " "}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3',
+                },
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -167,6 +174,13 @@ export default function CreateEvent() {
             id="startTime"
             // error={!!errors.startTime}
             // helperText={errors.startTime || " "}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3',
+                },
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -177,6 +191,13 @@ export default function CreateEvent() {
             id="endTime"
             // error={!!errors.endTime}
             // helperText={errors.endTime || " "}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3',
+                },
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -187,6 +208,13 @@ export default function CreateEvent() {
             id="attendance"
             // error={!!errors.attendance}
             // helperText={errors.attendance || " "}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3',
+                },
+              },
+            }}
           />
           <TextField
             margin="normal"
@@ -197,46 +225,61 @@ export default function CreateEvent() {
             id="complianceLimit"
             // error={!!errors.complianceLimit}
             // helperText={errors.complianceLimit || " "}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '&.Mui-focused fieldset': {
+                  borderColor: '#3A0CA3',
+                },
+              },
+            }}
           />
-          <Grid container>
-            <Grid item xs={6} display="flex" justifyContent={"center"}>
+          <Grid container sx={{ mt: 2, justifyContent: "center" }}>
+            <Grid item xs={6} sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <Button
                 type="submit"
-                // fullWidth
-                variant="contained"
-                sx={{ 
-                  mt: 3, 
-                  mb: 2, 
+                variant="outlined"
+                endIcon={<TbPlus size={20} color="#FF7F50" />}
+                sx={{
+                  width: '75%',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "#FF7F50",
+                  border: "2px solid #FF7F50",
+                  borderRadius: 2,
+                  padding: "10px",
                   fontFamily: "Open Sans",
-                  backgroundColor: "#3A0CA3",
-                  color: "#FFF",
                   ":hover": {
-                    backgroundColor: "#E7CDE1",
-                    color: "#000"
-                  }, 
+                    border: "2px solid #FF7F50",
+                    backgroundColor: "rgba(255,127,80, 0.04)"
+                  }
                 }}
               >
                 Create Event
               </Button>
             </Grid>
-            <Grid item xs={6} display="flex" justifyContent={"center"}>
+            <Grid item xs={6} sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <Button
                 type="submit"
-                // fullWidth
-                variant="contained"
+                variant="outlined"
+                endIcon={<TbX size={20} color="#3A0CA3" />}
                 onClick={() => {
                   navigate("/my-events")
                 }}
-                sx={{ 
-                  mt: 3, 
-                  mb: 2, 
+                sx={{
+                  width: '75%',
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "#3A0CA3",
+                  border: "2px solid #3A0CA3",
+                  borderRadius: 2,
+                  padding: '10px',
                   fontFamily: "Open Sans",
-                  backgroundColor: "#3A0CA3",
-                  color: "#FFF",
                   ":hover": {
-                    backgroundColor: "#E7CDE1",
-                    color: "#000"
-                  }, 
+                    border: "2px solid #3A0CA3",
+                    backgroundColor: "rgba(58,12,163, 0.04)"
+                  }
                 }}
               >
                 Cancel
