@@ -19,7 +19,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/my-events" element={<Auth component = {MyEvents} />}/>
-          <Route path="/event-creation" element={<Auth component={CreateEvent} />} />
+          <Route path="/create-event" element={<Auth component={CreateEvent} />} />
           <Route path="/user-info" element={<Auth component={UserDetails} />} />
           <Route path="/modify-user" element={<Auth component={UpdateUser} />} />
           <Route path="/change-password" element={<Auth component={ResetPassword} />} />

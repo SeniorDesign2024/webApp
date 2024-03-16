@@ -127,7 +127,7 @@ export default function MyEvents() {
             <Button
               variant="outlined"
               component={Link}
-              to="/event-creation"
+              to="/create-event"
               endIcon={<TbPlus size={30} color="#FF7F50" />}
               sx={{
                 minWidth: 'auto',
