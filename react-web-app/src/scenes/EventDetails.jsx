@@ -93,12 +93,17 @@ const EventDetails = () => {
       trows.push({
         id: trows.length + 1,
         timeStamps: timeStamps,
-        attendees: "", // Assuming no attendees for now
+        attendees: 0, // Assuming no attendees for now
         comments: "",
       });
   
       // Increment currentTime by the time interval (in seconds)
       currentTime.setSeconds(currentTime.getSeconds() + timeInterval);
+    }
+
+    // Populating the attendees column.
+    for (let i = 0; i < data.attendance.length; i++) {
+      trows[i].attendees = data.attendance[i];
     }
   
     setRows(trows);
