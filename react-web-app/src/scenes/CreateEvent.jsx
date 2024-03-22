@@ -11,14 +11,21 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import { TbPlus } from "react-icons/tb";
 import { TbX } from "react-icons/tb";
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 export default function CreateEvent() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    console.log(startTime);
+    console.log(endTime);
 
     const errors = {};
 
@@ -66,13 +73,7 @@ export default function CreateEvent() {
 
     // Parse attendance field from string to array of integers
     const attendanceString = data.get("attendance");
-    const attendanceArray = attendanceString
-      .split(",")
-      .map((str) => parseInt(str.trim()));
-
-    // Parse date and time strings into Date objects
-    const startTime = new Date(data.get("startTime"));
-    const endTime = new Date(data.get("endTime"));
+    const attendanceArray = attendanceString.split(",").map((str) => parseInt(str.trim()));
 
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
@@ -157,6 +158,7 @@ export default function CreateEvent() {
             // error={!!errors.name}
             // helperText={errors.name || " "}
             sx={{
+              pb: 1,
               '& .MuiOutlinedInput-root': {
                 '&.Mui-focused fieldset': {
                   borderColor: '#3A0CA3',
@@ -164,7 +166,42 @@ export default function CreateEvent() {
               },
             }}
           />
-          <TextField
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              // required
+              id="startTime"
+              name="startTime"
+              label="Start Time"
+              onChange={(value) => setStartTime(value.$d)}
+              sx={{
+                width: "100%",
+                pb: 2,
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#3A0CA3',
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              // required
+              id="endTime"
+              name="endTime"
+              label="End Time"
+              onChange={(value) => setEndTime(value.$d) }
+              sx={{
+                width: "100%",
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#3A0CA3',
+                  },
+                },
+              }}
+            />
+          </LocalizationProvider>
+          {/* <TextField
             margin="normal"
             required
             fullWidth
@@ -197,7 +234,7 @@ export default function CreateEvent() {
                 },
               },
             }}
-          />
+          /> */}
           <TextField
             margin="normal"
             required

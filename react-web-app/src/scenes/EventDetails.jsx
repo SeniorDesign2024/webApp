@@ -89,7 +89,7 @@ const EventDetails = () => {
     // Loop until currentTime reaches endTime
     while (currentTime <= endTime) {
       // Format the current time and add it to the rows
-      let timeStamps = currentTime.toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true });
+      let timeStamps = currentTime.toLocaleTimeString();
       trows.push({
         id: trows.length + 1,
         timeStamps: timeStamps,
@@ -141,10 +141,10 @@ const EventDetails = () => {
         </Grid>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
           <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
-            Start Time: {new Date(eventData.startTime).toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
+            Start Time: {new Date(eventData.startTime).toLocaleTimeString()}
           </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
-            End Time: {new Date(eventData.endTime).toLocaleTimeString("en-US", { timeZone: "UTC", hour12: true })}
+            End Time: {new Date(eventData.endTime).toLocaleTimeString()}
           </Typography>
         </Grid>
       </Grid>
@@ -191,7 +191,6 @@ const EventDetails = () => {
               xAxis={[
                 { 
                   label: "Time (seconds)",
-                  // data: [0, 10, 20, 30, 40, 50, 60]
                   data: intervalList
                 }
               ]}

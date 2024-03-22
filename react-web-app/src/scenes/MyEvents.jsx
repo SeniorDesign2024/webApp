@@ -56,20 +56,6 @@ export default function MyEvents() {
     });
   };
 
-  const formatTime = (milliseconds) => {
-    // Converting milliseconds to readable time format HH:MM:SS
-    const seconds = Math.floor((milliseconds / 1000) % 60);
-    const minutes = Math.floor((milliseconds / 1000 / 60) % 60);
-    const hours = Math.floor((milliseconds / 1000 / 60 / 60) % 24);
-    const formattedTime = [
-      hours.toString().padStart(2, "0"),
-      minutes.toString().padStart(2, "0"),
-      seconds.toString().padStart(2, "0"),
-    ].join(":");
-
-    return formattedTime;
-  };
-
   const formatDate = (date, month, year) => {
     // Formatting Date
     const months = [
@@ -215,7 +201,7 @@ export default function MyEvents() {
                         event.startTime.getMonth(),
                         event.startTime.getFullYear()
                       )}{" "}
-                      @ {formatTime(event.startTime)}
+                      @ {event.startTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </ListItemText>
                   </ListItemButton>
                 </ListItem>
