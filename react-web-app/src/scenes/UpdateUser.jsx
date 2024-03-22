@@ -41,8 +41,7 @@ const UpdateUser = () => {
 
     fetch(`/api/user/update-user`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
       body: JSON.stringify({
         username: data.get("username"),
         email: data.get("email"),

@@ -89,8 +89,7 @@ export default function CreateEvent() {
 
     fetch(`/api/event/create-event`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
       body: JSON.stringify({
         name: data.get("name"),
         startTime: startTime,

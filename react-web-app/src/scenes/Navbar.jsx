@@ -13,8 +13,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
   const handleLogout = () => {
     fetch(`/api/auth/logout`, {
       method: "POST",
-      headers: {'Content-Type': 'application/json'},
-      credentials: "include",
+      headers: {'Content-Type': 'application/json', 'x-access-token': sessionStorage.getItem("accessToken") },
     })
     .then(response => {
       if (!response.ok) {

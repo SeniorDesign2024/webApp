@@ -14,6 +14,7 @@ const UserDetails = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "x-access-token": sessionStorage.getItem("accessToken")
         },
       });
 

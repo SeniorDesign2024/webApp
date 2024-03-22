@@ -23,8 +23,7 @@ export default function MyEvents() {
   async function fetchList() {
     const response = await fetch(`/api/event/list-events`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
     });
     if (response.ok) {
       setDataReceived(true);

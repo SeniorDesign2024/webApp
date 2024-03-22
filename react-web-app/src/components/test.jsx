@@ -12,7 +12,14 @@ export default class TestComponent extends Component {
   }
 
   componentDidMount(){
-    fetch('api/event/test')
+    let accessToken = sessionStorage.getItem("accessToken");
+    fetch('api/event/test', {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': accessToken
+      }
+    })
     .then(res=> {
       if(!res.ok) this.setState({isAuthenticated : false, isMounted : true})
       return res.json();

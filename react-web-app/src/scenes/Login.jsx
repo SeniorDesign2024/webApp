@@ -27,7 +27,6 @@ export default function SignIn() {
     fetch(`/api/auth/signin`, {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
-      credentials: "include",
       body: JSON.stringify({
         "username": data.get('username'),
         "password": data.get('password')
@@ -37,8 +36,12 @@ export default function SignIn() {
       if (!response.ok) {
         console.log(response.statusText)
       } else {
-        navigate("/my-events");
+        return response.json()
       }
+    })
+    .then(data => {
+      sessionStorage.setItem("accessToken", data.accessToken)
+      navigate("/my-events");
     })
   };
 

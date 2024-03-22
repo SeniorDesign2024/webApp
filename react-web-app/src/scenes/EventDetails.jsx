@@ -42,8 +42,7 @@ const EventDetails = () => {
       try {
         const response = await fetch('/api/event/event-details', {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
           body: JSON.stringify({
             "eventId": eventId
           })

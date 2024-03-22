@@ -38,8 +38,7 @@ const ResetPassword = () => {
 
     fetch(`/api/auth/reset-password`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
+      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
       body: JSON.stringify({
         oldPassword: data.get("oldPassword"),
         newPassword: data.get("newPassword"),
