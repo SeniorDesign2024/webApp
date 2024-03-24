@@ -8,9 +8,11 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+import io from 'socket.io-client';
 
 const EventDetails = () => {
   const eventId = useParams();
+  const [socket, setSocket] = useState(null);
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
@@ -70,12 +72,42 @@ const EventDetails = () => {
 
     fetchEventData();
 
-    const interval = setInterval(() => {
-      fetchEventData();
-    }, 30000);
+    const newSocket = io('http://localhost:3001', {
+      extraHeaders: {
+        'x-access-token': sessionStorage.getItem("accessToken")
+      }
+    });
 
-    return () => clearInterval(interval);
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
   }, [ eventId ])
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('connect', () => {
+      console.log('Connected to socket.io server');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from socket.io server');
+    });
+
+    socket.on('countReceived', (data) => {
+      console.log('Received count:', data.count);
+      setAttendeesList(data.count);
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('countReceived');
+      // Clean up other socket listeners if necessary
+    };
+  }, [socket]);
     
   function populateTableRows(data) {
     const trows = [];
