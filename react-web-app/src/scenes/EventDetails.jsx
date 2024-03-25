@@ -98,14 +98,22 @@ const EventDetails = () => {
 
     socket.on('countReceived', (data) => {
       console.log('Received count:', data.count);
-      setAttendeesList(data.count);
+      setAttendeesList(prevAttendeesList => [...prevAttendeesList, data.count]);
+      const attendanceLength = attendeesList.length;
+      console.log(attendanceLength);
+      rows[attendanceLength].attendees = data.count;
+      console.log(rows)
+      const l = []
+      for (let i = 0; i < attendanceLength; i++) {
+        l.push(i*10)
+      }
+      setIntervalList(l)
     });
 
     return () => {
       socket.off('connect');
       socket.off('disconnect');
       socket.off('countReceived');
-      // Clean up other socket listeners if necessary
     };
   }, [socket]);
     
