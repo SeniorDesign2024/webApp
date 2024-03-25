@@ -54,27 +54,6 @@ export default function CreateEvent() {
       errors.complianceLimit = "Compliance limit cannot be negative";
     }
 
-    // Error checking for attendance
-    if (!data.get("attendance")) {
-      errors.attendance = "Attendance is required";
-    } else {
-      const attendanceString = data.get("attendance");
-      const attendanceArray = attendanceString
-        .split(",")
-        .map((str) => parseInt(str.trim()));
-
-      if (attendanceArray.some((num) => isNaN(num))) {
-        errors.attendance =
-          "Attendance must be a comma-separated list of numbers";
-      } else if (attendanceArray.some((num) => num < 0)) {
-        errors.attendance = "Attendance values cannot be negative";
-      }
-    }
-
-    // Parse attendance field from string to array of integers
-    const attendanceString = data.get("attendance");
-    const attendanceArray = attendanceString.split(",").map((str) => parseInt(str.trim()));
-
     if (Object.keys(errors).length > 0) {
       setErrors(errors);
       return;
@@ -84,7 +63,6 @@ export default function CreateEvent() {
       name: data.get("name"),
       startTime: startTime,
       endTime: endTime,
-      attendance: attendanceArray,
       complianceLimit: data.get("complianceLimit"),
     });
 
@@ -95,7 +73,6 @@ export default function CreateEvent() {
         name: data.get("name"),
         startTime: startTime,
         endTime: endTime,
-        attendance: attendanceArray,
         complianceLimit: data.get("complianceLimit"),
       }),
     }).then((response) => {
@@ -235,7 +212,7 @@ export default function CreateEvent() {
               },
             }}
           /> */}
-          <TextField
+          {/* <TextField
             margin="normal"
             required
             fullWidth
@@ -251,7 +228,7 @@ export default function CreateEvent() {
                 },
               },
             }}
-          />
+          /> */}
           <TextField
             margin="normal"
             required
