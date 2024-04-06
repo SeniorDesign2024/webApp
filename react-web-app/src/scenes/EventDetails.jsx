@@ -14,7 +14,8 @@ const EventDetails = () => {
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
-  const [rows, setRows] = useState([])
+  const [rows, setRows] = useState([]);
+  const [tablePopulated, setTablePopulated] = useState(false);
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
@@ -55,7 +56,15 @@ const EventDetails = () => {
         const data  = await response.json()
         setEventData(data)
         setAttendeesList(data.attendance)
-        populateTableRows(data)
+
+        if (!tablePopulated) {
+          console.log("creating table for the first time!")
+          populateTableRows(data);
+          setTablePopulated(true);
+        } else {
+          console.log("appending to attendees");
+          appendRows(data);
+        }
 
         const l = []
         for (let i = 0; i < data.attendance.length; i++) {
@@ -75,7 +84,7 @@ const EventDetails = () => {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [ eventId ])
+  }, [ eventId, tablePopulated ])
     
   function populateTableRows(data) {
     const trows = [];
@@ -107,6 +116,16 @@ const EventDetails = () => {
     }
   
     setRows(trows);
+  }
+
+  function appendRows(data) {
+    const updatedRows = [...rows];
+
+    for (let i = 0; i < data.attendance.length; i++) {
+      updatedRows[i].attendees = data.attendance[i];
+    }
+
+    setRows(updatedRows);
   }
 
   return (
