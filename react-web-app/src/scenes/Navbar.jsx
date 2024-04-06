@@ -68,7 +68,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
           <TbHome size={30} color="#3A0CA3" />
         </Button>)}
 
-        <Button
+        {location.pathname !== '/user-info' && (<Button
           onClick={() => navigate("/user-info")}
           sx={{
             width: "50px",
@@ -82,7 +82,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
           }}
         >
           <CgProfile size={30} color="#3A0CA3" />
-        </Button>
+        </Button>)}
         
         <Button
           onClick={() => handleLogout() }
