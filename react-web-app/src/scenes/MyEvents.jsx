@@ -104,7 +104,7 @@ export default function MyEvents() {
             My Events
           </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
-            List of all you upcoming events!
+            List of all your upcoming events!
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ pl: 28, display: "flex", alignItems: "center" }}>
