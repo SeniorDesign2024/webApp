@@ -104,7 +104,7 @@ export default function MyEvents() {
             My Events
           </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
-            List of all you upcoming events!
+            List of all your upcoming events!
           </Typography>
         </Grid>
         <Grid item xs={6} sx={{ pl: 28, display: "flex", alignItems: "center" }}>
@@ -146,6 +146,7 @@ export default function MyEvents() {
                 border: "2px solid #3A0CA3",
                 borderRadius: 2,
                 padding: '10px',
+                fontFamily: "Open Sans",
                 ":hover": {
                   border: "2px solid #3A0CA3",
                   backgroundColor: "rgba(58,12,163, 0.04)"
