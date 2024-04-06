@@ -58,16 +58,20 @@ const UserDetails = () => {
         newPassword: data.get("newPassword"),
       }),
     })
-      .then((response) => {
-        if (!response.ok) {
-          console.log(response.statusText)
-        } else {
-          setShowChangePassword(!showChangePassword)
-        }
-      })
-      .catch((error) => {
-        console.error("Error resetting password:", error);
-      });
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData => {
+          alert(errorData.error || "Unknown Error!")
+        }))
+      } else {
+        setShowChangePassword(!showChangePassword)
+        alert("Success!")
+      }
+    })
+    .catch((error) => {
+      console.log("Error resetting password:", error.message);
+      alert("Error resetting password: " + error.message)
+    });
   };
 
   return (
@@ -163,13 +167,16 @@ const UserDetails = () => {
             userData && (
               <>
                 <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
-                  Username: {userData.username}
+                  <strong>Role:</strong>&nbsp;ADMIN
                 </Typography>
                 <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
-                  Email: {userData.email}
+                  <strong>Username:</strong>&nbsp;{userData.username}
                 </Typography>
                 <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
-                  User ID: {userData.userid}
+                <strong>Email:</strong>&nbsp;{userData.email}
+                </Typography>
+                <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
+                <strong>User ID:</strong>&nbsp;{userData.userid}
                 </Typography> 
               </>
             )
