@@ -16,8 +16,9 @@ const EventDetails = () => {
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
-  const [rows, setRows] = useState([])
   const [attendanceListLength, setAttendanceListLength] = useState(0);
+  const [rows, setRows] = useState([]);
+  const [tablePopulated, setTablePopulated] = useState(false);
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
@@ -58,7 +59,7 @@ const EventDetails = () => {
         const data  = await response.json()
         setEventData(data)
         setAttendeesList(data.attendance)
-        populateTableRows(data)
+        populateTableRows(data);
 
         const l = []
         for (let i = 0; i < data.attendance.length; i++) {
@@ -162,8 +163,6 @@ const EventDetails = () => {
         break;
       }
     }
-
-    console.log(updatedRows);
 
     setAttendanceListLength(length + 1);
     setRows(updatedRows);

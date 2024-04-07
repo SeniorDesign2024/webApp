@@ -7,9 +7,12 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import logo from "../logo2.png"
+import logo from "../logo2.png";
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
+  const navigate = useNavigate();
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -28,6 +31,13 @@ export default function SignUp() {
         "email": data.get("email"),
         "password": data.get("password")
       })
+    })
+    .then(response => {
+      if (response.ok) {
+        navigate("/");
+      } else {
+        console.log("Unable to sign up!");
+      }
     })
   };
 
