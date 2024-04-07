@@ -8,12 +8,15 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
+import io from 'socket.io-client';
 
 const EventDetails = () => {
   const eventId = useParams();
+  const [socket, setSocket] = useState(null);
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
+  const [attendanceListLength, setAttendanceListLength] = useState(0);
   const [rows, setRows] = useState([]);
   const [tablePopulated, setTablePopulated] = useState(false);
   const columns = [
@@ -56,15 +59,7 @@ const EventDetails = () => {
         const data  = await response.json()
         setEventData(data)
         setAttendeesList(data.attendance)
-
-        if (!tablePopulated) {
-          console.log("creating table for the first time!")
-          populateTableRows(data);
-          setTablePopulated(true);
-        } else {
-          console.log("appending to attendees");
-          appendRows(data);
-        }
+        populateTableRows(data);
 
         const l = []
         for (let i = 0; i < data.attendance.length; i++) {
@@ -79,12 +74,52 @@ const EventDetails = () => {
 
     fetchEventData();
 
-    const interval = setInterval(() => {
-      fetchEventData();
-    }, 30000);
+    const newSocket = io('http://localhost:3001', {
+      extraHeaders: {
+        'x-access-token': sessionStorage.getItem("accessToken")
+      }
+    });
 
-    return () => clearInterval(interval);
-  }, [ eventId, tablePopulated ])
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [ eventId ])
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('connect', () => {
+      console.log('Connected to socket.io server');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from socket.io server');
+    });
+
+    socket.on('countReceived', (data) => {
+      console.log('Received count:', data.count);
+      appendRows(data, attendanceListLength)
+
+      setAttendeesList(prevAttendeesList => [...prevAttendeesList, data.count])
+
+      const l = []
+      for (let i = 0; i < attendanceListLength + 1; i++) {
+        l.push(i*10)
+      }
+      
+      console.log(l.length);
+      
+      setIntervalList(l)
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('countReceived');
+    };
+  }, [socket, attendanceListLength]);
     
   function populateTableRows(data) {
     const trows = [];
@@ -114,17 +149,22 @@ const EventDetails = () => {
     for (let i = 0; i < data.attendance.length; i++) {
       trows[i].attendees = data.attendance[i];
     }
-  
+
+    setAttendanceListLength(data.attendance.length);
     setRows(trows);
   }
 
-  function appendRows(data) {
+  function appendRows(data, length) {
     const updatedRows = [...rows];
 
-    for (let i = 0; i < data.attendance.length; i++) {
-      updatedRows[i].attendees = data.attendance[i];
+    for (let i = 0; i < length + 1; i++) {
+      if (i === length) {
+        updatedRows[i].attendees = data.count;
+        break;
+      }
     }
 
+    setAttendanceListLength(length + 1);
     setRows(updatedRows);
   }
 
@@ -206,28 +246,30 @@ const EventDetails = () => {
             />
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex' }}>
-            <LineChart
-              xAxis={[
-                { 
-                  label: "Time (seconds)",
-                  data: intervalList
-                }
-              ]}
-              series={[
-                {
-                  label: "Attendees",
-                  color: "#FF7F50",
-                  data: attendeesList,
-                },
-              ]}
-              width={700}
-              height={400}
-              sx={{
-                '& .MuiLineElement-root': {
-                  strokeWidth: 4,
-                },
-              }}
-            />
+            {intervalList && attendeesList && (
+              <LineChart
+                xAxis={[
+                  { 
+                    label: "Time (seconds)",
+                    data: intervalList
+                  }
+                ]}
+                series={[
+                  {
+                    label: "Attendees",
+                    color: "#FF7F50",
+                    data: attendeesList,
+                  },
+                ]}
+                width={700}
+                height={400}
+                sx={{
+                  '& .MuiLineElement-root': {
+                    strokeWidth: 4,
+                  },
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </Box>
