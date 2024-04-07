@@ -17,6 +17,7 @@ const EventDetails = () => {
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
   const [rows, setRows] = useState([])
+  const [attendanceListLength, setAttendanceListLength] = useState(0);
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
@@ -98,15 +99,17 @@ const EventDetails = () => {
 
     socket.on('countReceived', (data) => {
       console.log('Received count:', data.count);
-      setAttendeesList(prevAttendeesList => [...prevAttendeesList, data.count]);
-      const attendanceLength = attendeesList.length;
-      console.log(attendanceLength);
-      rows[attendanceLength].attendees = data.count;
-      console.log(rows)
+      appendRows(data, attendanceListLength)
+
+      setAttendeesList(prevAttendeesList => [...prevAttendeesList, data.count])
+
       const l = []
-      for (let i = 0; i < attendanceLength; i++) {
+      for (let i = 0; i < attendanceListLength + 1; i++) {
         l.push(i*10)
       }
+      
+      console.log(l.length);
+      
       setIntervalList(l)
     });
 
@@ -115,7 +118,7 @@ const EventDetails = () => {
       socket.off('disconnect');
       socket.off('countReceived');
     };
-  }, [socket]);
+  }, [socket, attendanceListLength]);
     
   function populateTableRows(data) {
     const trows = [];
@@ -145,8 +148,25 @@ const EventDetails = () => {
     for (let i = 0; i < data.attendance.length; i++) {
       trows[i].attendees = data.attendance[i];
     }
-  
+
+    setAttendanceListLength(data.attendance.length);
     setRows(trows);
+  }
+
+  function appendRows(data, length) {
+    const updatedRows = [...rows];
+
+    for (let i = 0; i < length + 1; i++) {
+      if (i === length) {
+        updatedRows[i].attendees = data.count;
+        break;
+      }
+    }
+
+    console.log(updatedRows);
+
+    setAttendanceListLength(length + 1);
+    setRows(updatedRows);
   }
 
   return (
@@ -227,28 +247,30 @@ const EventDetails = () => {
             />
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex' }}>
-            <LineChart
-              xAxis={[
-                { 
-                  label: "Time (seconds)",
-                  data: intervalList
-                }
-              ]}
-              series={[
-                {
-                  label: "Attendees",
-                  color: "#FF7F50",
-                  data: attendeesList,
-                },
-              ]}
-              width={700}
-              height={400}
-              sx={{
-                '& .MuiLineElement-root': {
-                  strokeWidth: 4,
-                },
-              }}
-            />
+            {intervalList && attendeesList && (
+              <LineChart
+                xAxis={[
+                  { 
+                    label: "Time (seconds)",
+                    data: intervalList
+                  }
+                ]}
+                series={[
+                  {
+                    label: "Attendees",
+                    color: "#FF7F50",
+                    data: attendeesList,
+                  },
+                ]}
+                width={700}
+                height={400}
+                sx={{
+                  '& .MuiLineElement-root': {
+                    strokeWidth: 4,
+                  },
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </Box>
