@@ -18,7 +18,6 @@ const EventDetails = () => {
   const [intervalList, setIntervalList] = useState([]);
   const [attendanceListLength, setAttendanceListLength] = useState(0);
   const [rows, setRows] = useState([]);
-  const [tablePopulated, setTablePopulated] = useState(false);
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
