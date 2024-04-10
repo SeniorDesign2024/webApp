@@ -9,6 +9,7 @@ import UserDetails from './scenes/UserDetails';
 import UpdateUser from './scenes/UpdateUser';
 import ResetPassword from './scenes/ResetPassword';
 import EventDetails from './scenes/EventDetails';
+import AboutPage from './scenes/AboutPage';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/modify-user" element={<Auth component={UpdateUser} />} />
           <Route path="/change-password" element={<Auth component={ResetPassword} />} />
           <Route path="/event-details/:eventId" element={<Auth component={EventDetails} />} /> 
+          <Route path="/about-page" element={<Auth component={AboutPage} />} />
         </Routes>
       </BrowserRouter>
       {/* <TestComponent /> */}
