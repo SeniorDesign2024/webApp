@@ -8,12 +8,14 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Grid from '@mui/material/Grid';
 import { TbRefresh } from "react-icons/tb";
 import { IoKey } from "react-icons/io5";
+import { TbEdit } from "react-icons/tb";
 import TextField from "@mui/material/TextField";
 
 const UserDetails = () => {
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
   const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showUserUpdate, setShowUserUpdate] = useState(false);
 
   const fetchUserData = async () => {
     try {
@@ -46,7 +48,7 @@ const UserDetails = () => {
     fetchUserData();
   };
 
-  const handleSubmit = (event) => {
+  const handleChangePassword = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -61,11 +63,11 @@ const UserDetails = () => {
     .then((response) => {
       if (!response.ok) {
         return response.json().then((errorData => {
-          alert(errorData.error || "Unknown Error!")
+          alert(errorData.error || "Unknown Error!");
         }))
       } else {
-        setShowChangePassword(!showChangePassword)
-        alert("Success!")
+        setShowChangePassword(!showChangePassword);
+        alert("Success!");
       }
     })
     .catch((error) => {
@@ -73,6 +75,35 @@ const UserDetails = () => {
       alert("Error resetting password: " + error.message)
     });
   };
+
+  const handleUpdateUser = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    fetch(`/api/user/update-user`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
+      body: JSON.stringify({
+        username: data.get("username"),
+        email: data.get("email"),
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData => {
+          alert(errorData.error || "Unknown Error!")
+        }))
+      } else {
+        setShowUserUpdate(!showUserUpdate);
+        alert("Success!");
+        handleRefresh();
+      }
+    })
+    .catch((error) => {
+      console.log("Error updating user: ", error.message);
+      alert("Error updating user: " + error.message)
+    })
+  }
 
   return (
     <Container
@@ -103,11 +134,40 @@ const UserDetails = () => {
             All your user details are here!
           </Typography>
         </Grid>
-        <Grid item xs={6} sx={{ pl: 28, display: "flex", alignItems: "center" }}>
+        <Grid item xs={6} sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ ml: 'auto', display: 'flex', gap: 2 }}> 
             <Button
               variant="outlined"
-              onClick={() => setShowChangePassword(!showChangePassword)}
+              onClick={() => {
+                setShowUserUpdate(!showUserUpdate)
+                if (showChangePassword) setShowChangePassword(false)
+              }}
+              endIcon={<TbEdit size={30} color="#3A0CA3" />}
+              sx={{
+                minWidth: 'auto',
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                color: "#3A0CA3",
+                border: "2px solid #3A0CA3",
+                borderRadius: 2,
+                padding: "10px",
+                fontFamily: "Open Sans",
+                ":hover": {
+                  border: "2px solid #3A0CA3",
+                  backgroundColor: "rgba(58,12,163, 0.04)"
+                }
+              }}
+            >
+              Edit User Details
+            </Button>
+
+            <Button
+              variant="outlined"
+              onClick={() => {
+                if (showUserUpdate) setShowUserUpdate(false)
+                setShowChangePassword(!showChangePassword)
+              }}
               endIcon={<IoKey size={30} color="#3A0CA3" />}
               sx={{
                 minWidth: 'auto',
@@ -184,7 +244,7 @@ const UserDetails = () => {
         </Grid>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
           { showChangePassword && (
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -198,7 +258,7 @@ const UserDetails = () => {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '&.Mui-focused fieldset': {
-                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                      borderColor: '#3A0CA3', 
                     },
                   },
                 }}
@@ -212,6 +272,13 @@ const UserDetails = () => {
                 name="newPassword"
                 type="password"
                 autoComplete="new-password"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3',
+                    },
+                  },
+                }}
               />
               <Button
                 type="submit"
@@ -230,6 +297,61 @@ const UserDetails = () => {
                 }}
               >
                 Change Password
+              </Button>
+            </Box>
+          )}
+          {showUserUpdate && (
+            <Box component="form" onSubmit={handleUpdateUser} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', 
+                    },
+                  },
+                }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email"
+                name="email"
+                autoComplete="email"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', 
+                    },
+                  },
+                }}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ 
+                  mt: 3, 
+                  mb: 2, 
+                  fontFamily: "Open Sans", 
+                  backgroundColor: "#3A0CA3",
+                  color: "#FFF",
+                  ":hover": {
+                    backgroundColor: "#E7CDE1",
+                    color: "#000"
+                  }, 
+                }}
+              >
+                Update User Details
               </Button>
             </Box>
           )}
