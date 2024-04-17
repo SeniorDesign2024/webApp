@@ -16,6 +16,7 @@ const UpdateUser = () => {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (event) => {
+  try {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -58,6 +59,10 @@ const UpdateUser = () => {
         console.error("Error updating user:", error);
         setUpdateError(true);
       });
+    } catch (error) {
+      console.error("Error updating user:", error.message);
+      setErrors("Failed to update user. Please try again later.");
+    }
   };
 
   return (

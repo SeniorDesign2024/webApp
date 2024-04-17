@@ -22,6 +22,7 @@ export default function CreateEvent() {
   const [endTime, setEndTime] = useState(null);
 
   const handleSubmit = (event) => {
+  try {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log(startTime);
@@ -82,6 +83,10 @@ export default function CreateEvent() {
         navigate("/my-events");
       }
     });
+  } catch (error) {
+    console.error("Error creating event:", error.message);
+    setErrors("Failed to create event. Please try again later.");
+  }
   };
 
   return (

@@ -16,6 +16,7 @@ const ResetPassword = () => {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = (event) => {
+  try {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -55,6 +56,10 @@ const ResetPassword = () => {
         console.error("Error resetting password:", error);
         setResetError(true);
       });
+    } catch (error) {
+      console.error("Error resetting password:", error.message);
+      setErrors("Failed to reset password. Please try again later.");
+    }
   };
 
   return (
