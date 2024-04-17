@@ -3,6 +3,9 @@ import { useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,13 +23,21 @@ export default function CreateEvent() {
   const [errors, setErrors] = useState({});
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [lightChecked, setLightChecked] = useState(true);
+  const [busyChecked, setBusyChecked] = useState(false);
 
   const handleSubmit = (event) => {
   try {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(startTime);
-    console.log(endTime);
+    const lightCheck = lightChecked ? 'Light' : '';
+    const busyCheck = busyChecked ? 'Busy' : '';
+
+    data.append('light', lightCheck);
+    data.append('busy', busyCheck);
+
+    console.log(lightCheck);
+    console.log(busyCheck);
 
     const errors = {};
 
@@ -74,6 +85,7 @@ export default function CreateEvent() {
         name: data.get("name"),
         startTime: startTime,
         endTime: endTime,
+        eventType: lightChecked ? 'sparse' : busyChecked ? 'dense' : '',
         complianceLimit: data.get("complianceLimit"),
       }),
     }).then((response) => {
@@ -148,6 +160,57 @@ export default function CreateEvent() {
               },
             }}
           />
+          <Grid container>
+            <Grid item xs={6} sx={{ px: 1, py: 1}}>
+              <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
+                Event Type:
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sx={{ px: 1, py: 1}}>
+            <FormGroup>
+              <FormControlLabel 
+                control={
+                  <Checkbox
+                    id="light"
+                    name="light"
+                    checked={lightChecked}
+                    onChange={(event) => {
+                      if (busyChecked) setBusyChecked(false)
+                      setLightChecked(event.target.checked)
+                    }} 
+                    sx={{ 
+                      color: '#3A0CA3', 
+                      '&.Mui-checked': { 
+                        color: '#3A0CA3' 
+                      } 
+                    }} 
+                  />
+                } 
+                label={<Typography sx={{ my: 1, fontFamily: "Open Sans" }}>Light</Typography>}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    id="busy"
+                    name="busy"
+                    checked={busyChecked}
+                    onChange={(event) => {
+                      if (lightChecked) setLightChecked(false)
+                      setBusyChecked(event.target.checked)
+                    }}
+                    sx={{ 
+                      color: '#3A0CA3', 
+                      '&.Mui-checked': { 
+                        color: '#3A0CA3' 
+                      }
+                    }} 
+                  />
+                } 
+                label={<Typography sx={{ my: 1, fontFamily: "Open Sans" }}>Busy</Typography>}
+              />
+            </FormGroup>
+            </Grid>
+          </Grid>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               // required
@@ -183,57 +246,6 @@ export default function CreateEvent() {
               }}
             />
           </LocalizationProvider>
-          {/* <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="startTime"
-            label="Start Time (MM/DD/YYYY, HH:MM AM/PM)"
-            id="startTime"
-            // error={!!errors.startTime}
-            // helperText={errors.startTime || " "}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '&.Mui-focused fieldset': {
-                  borderColor: '#3A0CA3',
-                },
-              },
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="endTime"
-            label="End Time (MM/DD/YYYY, HH:MM AM/PM)"
-            id="endTime"
-            // error={!!errors.endTime}
-            // helperText={errors.endTime || " "}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '&.Mui-focused fieldset': {
-                  borderColor: '#3A0CA3',
-                },
-              },
-            }}
-          /> */}
-          {/* <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="attendance"
-            label="Attendance (comma separated)"
-            id="attendance"
-            // error={!!errors.attendance}
-            // helperText={errors.attendance || " "}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '&.Mui-focused fieldset': {
-                  borderColor: '#3A0CA3',
-                },
-              },
-            }}
-          /> */}
           <TextField
             margin="normal"
             required
