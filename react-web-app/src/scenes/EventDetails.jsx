@@ -255,15 +255,28 @@ const EventDetails = () => {
                 ]}
                 series={[
                   {
+                    id: "attendance",
                     label: "Attendees",
                     color: "#FF7F50",
+                    showMark: false,
                     data: attendeesList,
                   },
+                  {
+                    id: "compliance",
+                    label: "Compliance Limit",
+                    color: "black",
+                    showMark: false,
+                    data: Array.from(attendeesList, x => eventData.complianceLimit)
+                  }
                 ]}
                 width={700}
                 height={400}
                 sx={{
-                  '& .MuiLineElement-root': {
+                  '& .MuiLineElement-series-compliance': {
+                    strokeDasharray: '10 5',
+                    strokeWidth: 2,
+                  },
+                  '& .MuiLineElement-series-attendance': {
                     strokeWidth: 4,
                   },
                 }}
