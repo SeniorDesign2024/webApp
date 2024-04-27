@@ -216,7 +216,7 @@ const EventDetails = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          overflowX: "auto",
+          // overflowX: "auto",
         }}
       >
         <Grid 
@@ -231,7 +231,7 @@ const EventDetails = () => {
             <DataGrid
               rows={rows}
               columns={columns}
-              components={{ Toolbar: GridToolbar }}
+              slots={{ toolbar: GridToolbar }}
               initialState={{
                 pagination: {
                   paginationModel: {
@@ -249,7 +249,7 @@ const EventDetails = () => {
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex', overflowX: "auto", }}>
             {intervalList && attendeesList && (
-              <PerfectScrollbar sx={{ width: "100%", height: 400 }}>
+              <PerfectScrollbar sx={{ width: "100%", height: "100%" }}>
                 <LineChart
                   xAxis={[
                     { 
