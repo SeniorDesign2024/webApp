@@ -21,7 +21,7 @@ import { Alert } from "@mui/material";
 
 export default function CreateEvent() {
   const navigate = useNavigate();
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [lightChecked, setLightChecked] = useState(true);
@@ -76,13 +76,16 @@ export default function CreateEvent() {
         }),
       }).then((response) => {
         if (!response.ok) {
-          console.log(response.statusText);
+          throw new Error(response.statusText);
         } else {
+          setErrors(null);
           navigate("/my-events");
         }
-      });
+      })
+      .catch(error => {
+        setErrors(error.message);
+      })
     } catch (error) {
-      console.error("Error creating event:", error.message);
       setErrors(error.message);
     }
   };

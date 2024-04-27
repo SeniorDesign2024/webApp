@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
 
   const handleSubmit = (event) => {
     try {
@@ -44,6 +44,7 @@ export default function SignIn() {
         if (!response.ok) {
           throw new Error(response.statusText);
         } else {
+          setError(null);
           return response.json()
         }
       })
@@ -57,7 +58,6 @@ export default function SignIn() {
     } catch (error) {
       setError(error.message)
     }
-    
   };
 
   return (
@@ -100,7 +100,7 @@ export default function SignIn() {
           Sign in
         </Typography>
         {error && (
-          <Alert severity='error' onClose={() => setError("")} sx={{ width: '100%' }}>
+          <Alert severity='error' onClose={() => setError(null)} sx={{ width: '100%' }}>
             {error}
           </Alert>
         )}

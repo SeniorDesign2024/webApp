@@ -10,10 +10,13 @@ import { TbRefresh } from "react-icons/tb";
 import { IoKey } from "react-icons/io5";
 import { TbEdit } from "react-icons/tb";
 import TextField from "@mui/material/TextField";
+import { Alert } from "@mui/material";
 
 const UserDetails = () => {
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null);
+  const [userDataError, setUserDataError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [userUpdateError, setUserUpdateError] = useState(null);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showUserUpdate, setShowUserUpdate] = useState(false);
 
@@ -29,14 +32,13 @@ const UserDetails = () => {
 
       if (!response.ok) {
         throw new Error("Failed to fetch user details");
+      } else {
+        const data = await response.json();
+        setUserData(data);
       }
 
-      const data = await response.json();
-      setUserData(data);
-      setError(null);
     } catch (error) {
-      console.error("Error fetching user details:", error.message);
-      setError("Failed to fetch user details. Please try again later.");
+      setUserDataError(error.message);
     }
   };
 
@@ -45,64 +47,90 @@ const UserDetails = () => {
   }, []);
 
   const handleRefresh = () => {
+    setShowChangePassword(false);
+    setShowUserUpdate(false);
     fetchUserData();
   };
 
   const handleChangePassword = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    try {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
 
-    fetch(`/api/auth/reset-password`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
-      body: JSON.stringify({
-        oldPassword: data.get("oldPassword"),
-        newPassword: data.get("newPassword"),
-      }),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((errorData => {
-          alert(errorData.error || "Unknown Error!");
-        }))
-      } else {
-        setShowChangePassword(!showChangePassword);
-        alert("Success!");
+      if (!data.get('oldPassword')) {
+        throw new Error('Please enter your old password!');
       }
-    })
-    .catch((error) => {
-      console.log("Error resetting password:", error.message);
-      alert("Error resetting password: " + error.message)
-    });
+
+      if (!data.get('newPassword')) {
+        throw new Error('Please enter a new password!');
+      } else if (data.get('newPassword') === data.get('oldPassword')) {
+        throw new Error('New password cannot be the same as the old password!');
+      }
+
+      fetch(`/api/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
+        body: JSON.stringify({
+          oldPassword: data.get("oldPassword"),
+          newPassword: data.get("newPassword"),
+        }),
+      })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData => {
+            throw new Error(errorData.error || "Unknown Error!");
+          }))
+        } else {
+          setShowChangePassword(!showChangePassword);
+          setPasswordError(null);
+        }
+      })
+      .catch((error) => {
+        setPasswordError(error.message);
+      });
+    } catch (error) {
+      setPasswordError(error.message);
+    }
   };
 
   const handleUpdateUser = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    try {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
 
-    fetch(`/api/user/update-user`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
-      body: JSON.stringify({
-        username: data.get("username"),
-        email: data.get("email"),
-      }),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((errorData => {
-          alert(errorData.error || "Unknown Error!")
-        }))
-      } else {
-        setShowUserUpdate(!showUserUpdate);
-        alert("Success!");
-        handleRefresh();
+      if (!data.get('username')) {
+        throw new Error('Please enter a new username!');
       }
-    })
-    .catch((error) => {
-      console.log("Error updating user: ", error.message);
-      alert("Error updating user: " + error.message)
-    })
+
+      if (!data.get('email')) {
+        throw new Error('Please enter a new email!');
+      }
+
+      fetch(`/api/user/update-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
+        body: JSON.stringify({
+          username: data.get("username"),
+          email: data.get("email"),
+        }),
+      })
+      .then((response) => {
+        if (!response.ok) {
+          return response.json().then((errorData => {
+            throw new Error(errorData.error || "Unknown Error!");
+          }))
+        } else {
+          setShowUserUpdate(!showUserUpdate);
+          setUserUpdateError(null)
+          handleRefresh();
+        }
+      })
+      .catch((error) => {
+        setUserUpdateError(error.message);
+      })
+    } catch (error) {
+      setUserUpdateError(error.message);
+    }
   }
 
   return (
@@ -215,14 +243,10 @@ const UserDetails = () => {
       </Grid>
       <Grid container sx={{ display: "flex", justifyContent: "flex-start"}}>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
-          {error ? (
-            <Typography
-              variant="body1"
-              color="error"
-              sx={{ fontFamily: "Open Sans" }}
-            >
-              {error}
-            </Typography>
+          {userDataError ? (
+            <Alert severity="error" onClose={() => setUserDataError(null)} sx={{ width: '100%' }}>
+              {userDataError}
+            </Alert>
           ) : (
             userData && (
               <>
@@ -243,8 +267,18 @@ const UserDetails = () => {
           )}
         </Grid>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+          { passwordError && (
+            <Alert severity="error" onClose={() => setPasswordError(null)} sx={{ width: '100%' }}>
+              {passwordError}
+            </Alert>
+          )}
+          { userUpdateError && (
+            <Alert severity="error" onClose={() => setUserUpdateError(null)} sx={{ width: '100%' }}>
+              {userUpdateError}
+            </Alert>
+          )}
           { showChangePassword && (
-            <Box component="form" onSubmit={handleChangePassword} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleChangePassword} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -301,7 +335,7 @@ const UserDetails = () => {
             </Box>
           )}
           {showUserUpdate && (
-            <Box component="form" onSubmit={handleUpdateUser} sx={{ mt: 1 }}>
+            <Box component="form" noValidate onSubmit={handleUpdateUser} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
