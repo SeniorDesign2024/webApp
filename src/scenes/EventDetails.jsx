@@ -119,6 +119,7 @@ const EventDetails = () => {
       socket.off('disconnect');
       socket.off('countReceived');
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, attendanceListLength]);
     
   function populateTableRows(data) {
