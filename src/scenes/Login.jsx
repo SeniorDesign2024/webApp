@@ -11,38 +11,53 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "../logo2.png"
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+import { useState } from 'react';
 
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-
-    fetch(`/api/auth/signin`, {
-      method: "POST",
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        "username": data.get('username'),
-        "password": data.get('password')
-      })
-    })
-    .then(response => {
-      if (!response.ok) {
-        console.log(response.statusText)
-      } else {
-        return response.json()
+    try {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      
+      if (!data.get('username')) {
+        throw new Error('Username is required!');
       }
-    })
-    .then(data => {
-      sessionStorage.setItem("accessToken", data.accessToken)
-      navigate("/my-events");
-    })
+
+      if (!data.get('password')) {
+        throw new Error('Password is required!')
+      }
+
+      fetch(`/api/auth/signin`, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          "username": data.get('username'),
+          "password": data.get('password')
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json()
+        }
+      })
+      .then(data => {
+        sessionStorage.setItem("accessToken", data.accessToken)
+        navigate("/my-events");
+      })
+      .catch(error => {
+        setError(error.message)
+      })
+    } catch (error) {
+      setError(error.message)
+    }
+    
   };
 
   return (
@@ -84,7 +99,12 @@ export default function SignIn() {
         >
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+        {error && (
+          <Alert severity='error' onClose={() => setError("")} sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+        )}
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
