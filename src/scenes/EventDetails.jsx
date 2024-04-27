@@ -9,6 +9,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import io from 'socket.io-client';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const EventDetails = () => {
   const eventId = useParams();
@@ -214,6 +215,7 @@ const EventDetails = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          overflowX: "auto",
         }}
       >
         <Grid 
@@ -244,43 +246,45 @@ const EventDetails = () => {
               disableRowSelectionOnClick
             />
           </Grid>
-          <Grid item xs={6} sx={{ display: 'flex' }}>
+          <Grid item xs={6} sx={{ display: 'flex', overflowX: "auto", }}>
             {intervalList && attendeesList && (
-              <LineChart
-                xAxis={[
-                  { 
-                    label: "Time (seconds)",
-                    data: intervalList
-                  }
-                ]}
-                series={[
-                  {
-                    id: "attendance",
-                    label: "Attendees",
-                    color: "#FF7F50",
-                    showMark: false,
-                    data: attendeesList,
-                  },
-                  {
-                    id: "compliance",
-                    label: "Compliance Limit",
-                    color: "black",
-                    showMark: false,
-                    data: Array.from(attendeesList, x => eventData.complianceLimit)
-                  }
-                ]}
-                width={700}
-                height={400}
-                sx={{
-                  '& .MuiLineElement-series-compliance': {
-                    strokeDasharray: '10 5',
-                    strokeWidth: 2,
-                  },
-                  '& .MuiLineElement-series-attendance': {
-                    strokeWidth: 4,
-                  },
-                }}
-              />
+              <PerfectScrollbar sx={{ width: "100%", height: 400 }}>
+                <LineChart
+                  xAxis={[
+                    { 
+                      label: "Time (seconds)",
+                      data: intervalList,
+                    }
+                  ]}
+                  series={[
+                    {
+                      id: "attendance",
+                      label: "Attendees",
+                      color: "#FF7F50",
+                      showMark: false,
+                      data: attendeesList,
+                    },
+                    {
+                      id: "compliance",
+                      label: "Compliance Limit",
+                      color: "black",
+                      showMark: false,
+                      data: Array.from(attendeesList, x => eventData.complianceLimit)
+                    }
+                  ]}
+                  width={700}
+                  height={400}
+                  sx={{
+                    '& .MuiLineElement-series-compliance': {
+                      strokeDasharray: '10 5',
+                      strokeWidth: 2,
+                    },
+                    '& .MuiLineElement-series-attendance': {
+                      strokeWidth: 4,
+                    },
+                  }}
+                />
+              </PerfectScrollbar>
             )}
           </Grid>
         </Grid>
