@@ -17,88 +17,74 @@ import { TbX } from "react-icons/tb";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Alert } from "@mui/material";
 
 export default function CreateEvent() {
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState("");
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [lightChecked, setLightChecked] = useState(true);
   const [busyChecked, setBusyChecked] = useState(false);
 
   const handleSubmit = (event) => {
-  try {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const lightCheck = lightChecked ? 'Light' : '';
-    const busyCheck = busyChecked ? 'Busy' : '';
+    try {
+      // Getting data from the create event form
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      const lightCheck = lightChecked ? 'Light' : '';
+      const busyCheck = busyChecked ? 'Busy' : '';
 
-    data.append('light', lightCheck);
-    data.append('busy', busyCheck);
+      data.append('light', lightCheck);
+      data.append('busy', busyCheck);
 
-    console.log(lightCheck);
-    console.log(busyCheck);
-
-    const errors = {};
-
-    // Error checking for name
-    if (!data.get("name")) {
-      errors.name = "Event name is required";
-    }
-
-    // Error checking for startTime
-    if (!data.get("startTime")) {
-      errors.startTime = "Start time is required";
-    }
-
-    // Error checking for endTime
-    if (!data.get("endTime")) {
-      errors.endTime = "End time is required";
-    }
-
-    // Error checking for complianceLimit
-    const complianceLimit = data.get("complianceLimit");
-    if (!complianceLimit) {
-      errors.complianceLimit = "Compliance limit is required";
-    } else if (isNaN(complianceLimit)) {
-      errors.complianceLimit = "Compliance limit must be a number";
-    } else if (parseInt(complianceLimit) < 0) {
-      errors.complianceLimit = "Compliance limit cannot be negative";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      setErrors(errors);
-      return;
-    }
-
-    console.log({
-      name: data.get("name"),
-      startTime: startTime,
-      endTime: endTime,
-      complianceLimit: data.get("complianceLimit"),
-    });
-
-    fetch(`/api/event/create-event`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
-      body: JSON.stringify({
-        name: data.get("name"),
-        startTime: startTime,
-        endTime: endTime,
-        eventType: lightChecked ? 'sparse' : busyChecked ? 'dense' : '',
-        complianceLimit: data.get("complianceLimit"),
-      }),
-    }).then((response) => {
-      if (!response.ok) {
-        console.log(response.statusText);
-      } else {
-        navigate("/my-events");
+      // Error checking for name
+      if (!data.get("name")) {
+        throw new Error("Event name is required!");
       }
-    });
-  } catch (error) {
-    console.error("Error creating event:", error.message);
-    setErrors("Failed to create event. Please try again later.");
-  }
+
+      // Error checking for startTime
+      if (!startTime) {
+        throw new Error("Start time is required!");
+      }
+
+      // Error checking for endTime
+      if (!endTime) {
+        throw new Error("End time is required!");
+      }
+
+      // Error checking for complianceLimit
+      const complianceLimit = data.get("complianceLimit");
+      if (!complianceLimit) {
+        throw new Error("Compliance limit is required!");
+      } else if (isNaN(complianceLimit)) {
+        throw new Error("Compliance limit must be a number!");
+      } else if (parseInt(complianceLimit) < 0) {
+        throw new Error("Compliance limit cannot be negative!");
+      }
+
+      // API call to create an event using values from the form.
+      fetch(`/api/event/create-event`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
+        body: JSON.stringify({
+          name: data.get("name"),
+          startTime: startTime,
+          endTime: endTime,
+          eventType: lightChecked ? 'sparse' : busyChecked ? 'dense' : '',
+          complianceLimit: data.get("complianceLimit"),
+        }),
+      }).then((response) => {
+        if (!response.ok) {
+          console.log(response.statusText);
+        } else {
+          navigate("/my-events");
+        }
+      });
+    } catch (error) {
+      console.error("Error creating event:", error.message);
+      setErrors(error.message);
+    }
   };
 
   return (
@@ -139,7 +125,12 @@ export default function CreateEvent() {
           alignItems: "center",
         }}
       >
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%", px: 1, py: 1 }}>
+        {errors && (
+          <Alert severity="error" onClose={() => setErrors(null)} sx={{ width: '100%' }}>
+            {errors}
+          </Alert>
+        )}
+        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ width: "100%", px: 1, py: 1 }}>
           <TextField
             margin="normal"
             required
@@ -149,8 +140,6 @@ export default function CreateEvent() {
             name="name"
             autoComplete="name"
             autoFocus
-            // error={!!errors.name}
-            // helperText={errors.name || " "}
             sx={{
               pb: 1,
               '& .MuiOutlinedInput-root': {
@@ -253,8 +242,6 @@ export default function CreateEvent() {
             name="complianceLimit"
             label="Compliance Limit"
             id="complianceLimit"
-            // error={!!errors.complianceLimit}
-            // helperText={errors.complianceLimit || " "}
             sx={{
               '& .MuiOutlinedInput-root': {
                 '&.Mui-focused fieldset': {
