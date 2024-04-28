@@ -6,8 +6,6 @@ import MyEvents from './scenes/MyEvents';
 import Auth from './components/test';
 import CreateEvent from './scenes/CreateEvent';
 import UserDetails from './scenes/UserDetails';
-import UpdateUser from './scenes/UpdateUser';
-import ResetPassword from './scenes/ResetPassword';
 import EventDetails from './scenes/EventDetails';
 import AboutPage from './scenes/AboutPage';
 
