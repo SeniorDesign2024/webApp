@@ -22,8 +22,6 @@ function App() {
           <Route path="/my-events" element={<Auth component = {MyEvents} />}/>
           <Route path="/create-event" element={<Auth component={CreateEvent} />} />
           <Route path="/user-info" element={<Auth component={UserDetails} />} />
-          <Route path="/modify-user" element={<Auth component={UpdateUser} />} />
-          <Route path="/change-password" element={<Auth component={ResetPassword} />} />
           <Route path="/event-details/:eventId" element={<Auth component={EventDetails} />} /> 
           <Route path="/about-page" element={<Auth component={AboutPage} />} />
         </Routes>
