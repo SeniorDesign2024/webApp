@@ -7,9 +7,13 @@ import { useNavigate, useLocation } from "react-router-dom"
 import logo from "../logo2.png";
 
 const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  /* Variables */
+  const navigate = useNavigate();      /* Navigates to appropriate pages as per the route provided */
+  const location = useLocation();      /* Returns the current location object */
 
+  /**
+   * Handles logout functionality of the application.
+   */
   const handleLogout = () => {
     fetch(`/api/auth/logout`, {
       method: "POST",
@@ -36,6 +40,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
         flexDirection: "row",
       }}
     >
+      {/* LOGO */}
       <Box
         sx={{
           display: "flex",
@@ -45,6 +50,8 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
       >
         <img src={logo} alt="logo" height={"100"} width={"100"} />
       </Box>
+
+      {/* NAV BUTTONS */}
       <Box
         sx={{
           display: "flex",
@@ -52,6 +59,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
           alignItems: "center",
         }}
       >
+        {/* HOME BUTTON */}
         {location.pathname !== '/my-events' && (<Button
           onClick={() => navigate("/my-events")}
           sx={{
@@ -68,6 +76,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
           <TbHome size={30} color="#3A0CA3" />
         </Button>)}
 
+        {/* USER PROFILE BUTTON */}
         {location.pathname !== '/user-info' && (<Button
           onClick={() => navigate("/user-info")}
           sx={{
@@ -84,6 +93,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
           <CgProfile size={30} color="#3A0CA3" />
         </Button>)}
         
+        {/* LOGOUT BUTTON */}
         <Button
           onClick={() => handleLogout() }
           sx={{
