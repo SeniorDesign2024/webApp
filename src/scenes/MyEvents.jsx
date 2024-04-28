@@ -168,7 +168,7 @@ export default function MyEvents() {
           overflowY: "auto",
         }}
       >
-        {events &&
+        {events.length > 0 ?
           events.map((event) => {
             return (
               <List key={event.eventId}>
@@ -208,7 +208,18 @@ export default function MyEvents() {
                 </ListItem>
               </List>
             );
-          })}
+          }) : (
+            <Typography
+              component="h1"
+              variant="h5"
+              sx={{
+                my: 1,
+                fontFamily: "Open Sans",
+              }}
+            >
+              No Events available to monitor or manage. Create a new event to get started!
+            </Typography>
+          )}
       </Box>
     </Container>
   );
