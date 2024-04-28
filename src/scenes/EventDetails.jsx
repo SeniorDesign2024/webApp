@@ -17,7 +17,6 @@ const EventDetails = () => {
   const [eventData, setEventData] = useState({})
   const [attendeesList, setAttendeesList] = useState([]);
   const [intervalList, setIntervalList] = useState([]);
-  const [attendanceListLength, setAttendanceListLength] = useState(0);
   const [rows, setRows] = useState([]);
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
@@ -100,18 +99,17 @@ const EventDetails = () => {
 
     socket.on('countReceived', (data) => {
       console.log('Received count:', data.count);
-      appendRows(data, attendanceListLength)
+      appendRows(data)
 
-      setAttendeesList(prevAttendeesList => [...prevAttendeesList, data.count])
-
-      const l = []
-      for (let i = 0; i < attendanceListLength + 1; i++) {
-        l.push(i*10)
-      }
-      
-      console.log(l.length);
-      
-      setIntervalList(l)
+      setAttendeesList(prevAttendeesList => {
+        const updatedAttendeesList = [...prevAttendeesList, data.count];
+        const l = [];
+        for (let i = 0; i < updatedAttendeesList.length; i++) {
+          l.push(i * 10);
+        }
+        setIntervalList(l);
+        return updatedAttendeesList;
+      });
     });
 
     return () => {
@@ -120,7 +118,7 @@ const EventDetails = () => {
       socket.off('countReceived');
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, attendanceListLength]);
+  }, [socket]);
     
   function populateTableRows(data) {
     const trows = [];
@@ -151,22 +149,18 @@ const EventDetails = () => {
       trows[i].attendees = data.attendance[i];
     }
 
-    setAttendanceListLength(data.attendance.length);
     setRows(trows);
   }
 
-  function appendRows(data, length) {
-    const updatedRows = [...rows];
-
-    for (let i = 0; i < length + 1; i++) {
-      if (i === length) {
-        updatedRows[i].attendees = data.count;
-        break;
+  function appendRows(data) {
+    setRows(prevRows => {
+      const updatedRows = [...prevRows];
+      const emptyRowIndex = updatedRows.findIndex(row => row.attendees === 0);
+      if (emptyRowIndex !== -1) {
+        updatedRows[emptyRowIndex] = { ...updatedRows[emptyRowIndex], attendees: data.count };
       }
-    }
-
-    setAttendanceListLength(length + 1);
-    setRows(updatedRows);
+      return updatedRows;
+    });
   }
 
   return (
@@ -228,24 +222,26 @@ const EventDetails = () => {
           }}
         >
           <Grid item xs={6}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              slots={{ toolbar: GridToolbar }}
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 5,
+            {rows && (
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                slots={{ toolbar: GridToolbar }}
+                initialState={{
+                  pagination: {
+                    paginationModel: {
+                      pageSize: 5,
+                    },
                   },
-                },
-              }}
-              sx={{
-                border: 0,
-              }}
-              pageSizeOptions={[5]}
-              checkboxSelection
-              disableRowSelectionOnClick
-            />
+                }}
+                sx={{
+                  border: 0,
+                }}
+                pageSizeOptions={[5]}
+                checkboxSelection
+                disableRowSelectionOnClick
+              />
+            )}
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex', overflowX: "auto", }}>
             {intervalList && attendeesList && (
@@ -262,7 +258,7 @@ const EventDetails = () => {
                       id: "attendance",
                       label: "Attendees",
                       color: "#FF7F50",
-                      showMark: false,
+                      // showMark: false,
                       data: attendeesList,
                     },
                     {
