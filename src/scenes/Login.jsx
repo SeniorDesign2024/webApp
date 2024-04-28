@@ -2,8 +2,6 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,11 +14,18 @@ import { useState } from 'react';
 
 
 export default function SignIn() {
+  // variables and state variable declarations
   const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);        // Stores error messages thrown by try catch statements
 
+  /**
+   * This function handles the login form submission and authenticates the user.
+   * @param {*} event 
+   */
   const handleSubmit = (event) => {
     try {
+      
+      /* Gets the form data and checks if all data is available to proceed. */
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       
@@ -32,6 +37,9 @@ export default function SignIn() {
         throw new Error('Password is required!')
       }
 
+      /* Makes a call to the sign in api to the backend using the form data
+         and authenticates the user. Upon successful authentication, redirects
+         the user to the My Events page or show the related error message.*/
       fetch(`/api/auth/signin`, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -42,13 +50,17 @@ export default function SignIn() {
       })
       .then(response => {
         if (!response.ok) {
-          throw new Error(response.statusText);
+          return response.json().then(errorData => {
+            throw new Error(errorData.message || "An unknown error occured!");
+          })
         } else {
           setError(null);
           return response.json()
         }
       })
       .then(data => {
+        /* Storing the access token to only allow access to other pages if they 
+           a user and are signed in. */
         sessionStorage.setItem("accessToken", data.accessToken)
         navigate("/my-events");
       })
@@ -70,6 +82,8 @@ export default function SignIn() {
       }}
     >
       <CssBaseline />
+
+      {/* Brand Logo */}
       <Box
         sx={{
           marginTop: 2,
@@ -81,6 +95,8 @@ export default function SignIn() {
       >
         <img src={logo} alt="logo" height={"100"} width={"100"} />
       </Box>
+
+      {/* SigIn Form */}
       <Box
         sx={{
           marginTop: 8,
@@ -99,6 +115,8 @@ export default function SignIn() {
         >
           Sign in
         </Typography>
+
+        {/* Displaying the error messages if any! */}
         {error && (
           <Alert severity='error' onClose={() => setError(null)} sx={{ width: '100%' }}>
             {error}
@@ -139,20 +157,6 @@ export default function SignIn() {
               },
             }}
           />
-          <FormControlLabel
-            control={
-              <Checkbox 
-                value="remember" 
-                color="primary"
-                sx={{
-                  '&.Mui-checked': {
-                    color: '#3A0CA3', // Set the checkmark (and the border when checked) to the desired color
-                  },
-                }}
-              />
-            }
-            label={<Typography variant="body2" sx={{ fontFamily: "Open Sans" }}>Remember me</Typography>}
-          />
           <Button
             type="submit"
             fullWidth
@@ -178,9 +182,9 @@ export default function SignIn() {
                 variant="body2" 
                 sx={{ 
                   fontFamily: "Open Sans", 
-                  color: '#3A0CA3', // Apply the Sign In button's background color
+                  color: '#3A0CA3',
                   '&:hover': {
-                    textDecoration: 'underline', // Optional: Change on hover if desired
+                    textDecoration: 'underline',
                   }
                 }}
               >
@@ -193,9 +197,9 @@ export default function SignIn() {
                 variant="body2" 
                 sx={{ 
                   fontFamily: "Open Sans", 
-                  color: '#3A0CA3', // Apply the Sign In button's background color
+                  color: '#3A0CA3',
                   '&:hover': {
-                    textDecoration: 'underline', // Optional: Change on hover if desired
+                    textDecoration: 'underline',
                   }
                 }}
               >
