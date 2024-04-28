@@ -13,11 +13,17 @@ import { Alert } from '@mui/material';
 import { useState } from 'react';
 
 export default function SignUp() {
-  const navigate = useNavigate();
-  const [error, setError] = useState(null);
+  /* Variables */
+  const navigate = useNavigate();             /* Navigates to appropriate pages as per the route provided */
+  const [error, setError] = useState(null);   /* State variable to store error messages if any */
   
+  /**
+   * Handles form submission and registers a new user.
+   * @param {*} event 
+   */
   const handleSubmit = (event) => {
     try {
+      /* Fetching data from the form and checking if all necessary data is available to proceed. */
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       
@@ -32,7 +38,10 @@ export default function SignUp() {
       if (!data.get('password')) {
         throw new Error ("A password is required!");
       }
-  
+
+      /* Making a call to the sign up api on the backend to register the user.
+         If successful, it will navigate to the login page, else, it will throw 
+         the appropriate error message. */
       fetch(`/api/auth/signup`, {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
@@ -71,6 +80,8 @@ export default function SignUp() {
       }}
     >
       <CssBaseline />
+
+      {/* BRAND LOGO */}
       <Box
         sx={{
           marginTop: 2,
@@ -82,6 +93,8 @@ export default function SignUp() {
       >
         <img src={logo} alt="logo" height={"100"} width={"100"} />
       </Box>
+
+      {/* SIGN UP FORM */}
       <Box
         sx={{
           marginTop: 8,
@@ -100,6 +113,8 @@ export default function SignUp() {
         >
           Sign up
         </Typography>
+
+        {/* DISPLAYING THE ERROR MESSAGE, IF ANY, THROWN AFTER FORM SUBMISSION */}
         {error && (
           <Alert severity='error' onClose={() => setError(null)} sx={{ width: '100%' }}>
             {error.message}

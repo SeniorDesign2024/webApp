@@ -13,13 +13,17 @@ import TextField from "@mui/material/TextField";
 import { Alert } from "@mui/material";
 
 const UserDetails = () => {
-  const [userData, setUserData] = useState(null);
-  const [userDataError, setUserDataError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const [userUpdateError, setUserUpdateError] = useState(null);
-  const [showChangePassword, setShowChangePassword] = useState(false);
-  const [showUserUpdate, setShowUserUpdate] = useState(false);
+  /* State Variables */
+  const [userData, setUserData] = useState(null);                         /* Stores the user data returned by the API       */
+  const [userDataError, setUserDataError] = useState(null);               /* Stores all errors related to user data         */
+  const [passwordError, setPasswordError] = useState(null);               /* Stores all errors related to password change   */
+  const [userUpdateError, setUserUpdateError] = useState(null);           /* Stores all errors related to user data updates */
+  const [showChangePassword, setShowChangePassword] = useState(false);    /* Hides or shows the change password form        */
+  const [showUserUpdate, setShowUserUpdate] = useState(false);            /* Hides or shows the update user details form    */
 
+  /**
+   * Fetches user data from the database using the user-details api and stores it.
+   */
   const fetchUserData = async () => {
     try {
       const response = await fetch("/api/user/user-details", {
@@ -46,14 +50,23 @@ const UserDetails = () => {
     fetchUserData();
   }, []);
 
+  /**
+   * Handles the page refresh
+   */
   const handleRefresh = () => {
     setShowChangePassword(false);
     setShowUserUpdate(false);
     fetchUserData();
   };
 
+  /**
+   * Handles password changes.
+   * @param {*} event 
+   */
   const handleChangePassword = (event) => {
     try {
+      /* Getting data from the change password form and checking if necessary 
+         data is available to proceed. */
       event.preventDefault();
       const data = new FormData(event.currentTarget);
 
@@ -67,6 +80,9 @@ const UserDetails = () => {
         throw new Error('New password cannot be the same as the old password!');
       }
 
+      /* Makes a call to the reset-password api on the backend to change the password.
+         If successful, it will close the form. Else, it will throw the appropriate error
+         to display to the user. */
       fetch(`/api/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
@@ -93,8 +109,14 @@ const UserDetails = () => {
     }
   };
 
+  /**
+   * Handles updates to the user information such as username and email.
+   * @param {*} event 
+   */
   const handleUpdateUser = (event) => {
     try {
+      /* Getting data from the change password form and checking if necessary 
+         data is available to proceed. */
       event.preventDefault();
       const data = new FormData(event.currentTarget);
 
@@ -106,6 +128,9 @@ const UserDetails = () => {
         throw new Error('Please enter a new email!');
       }
 
+      /* Makes a call to the update-user api on the backend to update user details.
+         If successful, it will close the form. Else, it will throw the appropriate error
+         to display to the user. */
       fetch(`/api/user/update-user`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },
@@ -147,6 +172,7 @@ const UserDetails = () => {
       <Navbar />
       <Grid container >
 
+        {/* PAGE TITLE */}
         <Grid item xs={6} sx={{ px: 1, py: 1}}>
           <Typography
             component="h1"
@@ -162,8 +188,12 @@ const UserDetails = () => {
             All your user details are here!
           </Typography>
         </Grid>
+
+        {/* PAGE BUTTONS */}
         <Grid item xs={6} sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ ml: 'auto', display: 'flex', gap: 2 }}> 
+
+            {/* EDIT USER DETAILS BUTTON */}
             <Button
               variant="outlined"
               onClick={() => {
@@ -190,6 +220,7 @@ const UserDetails = () => {
               Edit User Details
             </Button>
 
+            {/* CHANGE PASSWORD BUTTON */}
             <Button
               variant="outlined"
               onClick={() => {
@@ -216,6 +247,7 @@ const UserDetails = () => {
               Change Password
             </Button>
 
+            {/* REFRESH BUTTON */}
             <Button
               variant="outlined"
               onClick={() => handleRefresh()}
@@ -241,8 +273,11 @@ const UserDetails = () => {
           </Box>
         </Grid>
       </Grid>
+
+      {/* USER DETAILS SECTION */}
       <Grid container sx={{ display: "flex", justifyContent: "flex-start"}}>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+          {/* DISPLAY ERROR MESSAGES RELATED TO USER DETAILS */}
           {userDataError ? (
             <Alert severity="error" onClose={() => setUserDataError(null)} sx={{ width: '100%' }}>
               {userDataError}
@@ -250,9 +285,6 @@ const UserDetails = () => {
           ) : (
             userData && (
               <>
-                <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
-                  <strong>Role:</strong>&nbsp;ADMIN
-                </Typography>
                 <Typography sx={{ my: 1, fontFamily: "Open Sans", display: 'flex', justifyContent: 'flex-start' }}>
                   <strong>Username:</strong>&nbsp;{userData.username}
                 </Typography>
@@ -266,7 +298,10 @@ const UserDetails = () => {
             )
           )}
         </Grid>
+
+        {/* PASSWORD AND USER DETAILS UPDATE SECTION */}
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+          {/* DISPLAY ERRORS REGARDING PASSWORD AND USER DETAILS UPDATES */}
           { passwordError && (
             <Alert severity="error" onClose={() => setPasswordError(null)} sx={{ width: '100%' }}>
               {passwordError}
@@ -277,6 +312,8 @@ const UserDetails = () => {
               {userUpdateError}
             </Alert>
           )}
+
+          {/* CHANGE PASSWORD FORM. ONLY VISIBLE IF showChangePassword is true. */}
           { showChangePassword && (
             <Box component="form" noValidate onSubmit={handleChangePassword} sx={{ mt: 1 }}>
               <TextField
@@ -334,6 +371,8 @@ const UserDetails = () => {
               </Button>
             </Box>
           )}
+
+          {/* EDIT USER DETAILS FORM. ONLY VISIBLE IF showUserUpdate is true. */}
           {showUserUpdate && (
             <Box component="form" noValidate onSubmit={handleUpdateUser} sx={{ mt: 1 }}>
               <TextField

@@ -12,12 +12,15 @@ import io from 'socket.io-client';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const EventDetails = () => {
-  const eventId = useParams();
-  const [socket, setSocket] = useState(null);
-  const [eventData, setEventData] = useState({})
-  const [attendeesList, setAttendeesList] = useState([]);
-  const [intervalList, setIntervalList] = useState([]);
-  const [rows, setRows] = useState([]);
+  /* Variables */
+  const eventId = useParams();                              /* Event Id. Pulled from the parameters passed in.            */
+  const [socket, setSocket] = useState(null);               /* Stores the instance of web socket.                         */
+  const [eventData, setEventData] = useState({})            /* Stores the event data returned by the api.                 */
+  const [attendeesList, setAttendeesList] = useState([]);   /* Stores the attendance count list.                          */
+  const [intervalList, setIntervalList] = useState([]);     /* Stores the interval list used for the line chart's x-axis. */
+  const [rows, setRows] = useState([]);                     /* Stores an array of rows for the MUI data grid.             */
+
+  /* Defines the columns and the configuration properties of the MUI data grid */
   const columns = [
     { field: 'id', headerName: 'ID', width: 50 },
     {
@@ -41,6 +44,9 @@ const EventDetails = () => {
   ];
 
   useEffect(() => {
+    /**
+     * fetchEventData: Fetches the event data using the provided event id and stores it
+     */
     const fetchEventData = async () => {
       try {
         const response = await fetch('/api/event/event-details', {
@@ -73,6 +79,7 @@ const EventDetails = () => {
 
     fetchEventData();
 
+    /* Retrieves the web socket running at localhost:3001 and stores that instance. */
     const newSocket = io('http://localhost:3001', {
       extraHeaders: {
         'x-access-token': sessionStorage.getItem("accessToken")
@@ -86,6 +93,7 @@ const EventDetails = () => {
     };
   }, [ eventId ])
 
+  /* This useEffect is triggered when the app finds the connection to the websocket. */
   useEffect(() => {
     if (!socket) return;
 
@@ -97,8 +105,9 @@ const EventDetails = () => {
       console.log('Disconnected from socket.io server');
     });
 
+    /* Upon receiving an attendance count from the websocket, this block of code
+       updates the graph and the table live. */
     socket.on('countReceived', (data) => {
-      console.log('Received count:', data.count);
       appendRows(data)
 
       setAttendeesList(prevAttendeesList => {
@@ -119,7 +128,11 @@ const EventDetails = () => {
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
-    
+  
+  /**
+   * Populates the data grid table
+   * @param {JSON} data - The Event Data returned by the fetch api call.
+   */
   function populateTableRows(data) {
     const trows = [];
     let startTime = new Date(data.startTime);
@@ -152,9 +165,15 @@ const EventDetails = () => {
     setRows(trows);
   }
 
+  /**
+   * This function is used to update the attendance count in the data grid on the go
+   * @param {int} data 
+   */
   function appendRows(data) {
     setRows(prevRows => {
       const updatedRows = [...prevRows];
+      /* Updating the the attendance count on the first encounter of the value 
+         0 for the attendees property of a row. */
       const emptyRowIndex = updatedRows.findIndex(row => row.attendees === 0);
       if (emptyRowIndex !== -1) {
         updatedRows[emptyRowIndex] = { ...updatedRows[emptyRowIndex], attendees: data.count };
@@ -175,6 +194,8 @@ const EventDetails = () => {
     >
       <CssBaseline />
       <Navbar />
+
+      {/* PAGE TITLE */}
       <Box sx={{ px: 1, py: 1}}>
         <Typography
           component="h1"
@@ -210,7 +231,6 @@ const EventDetails = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          // overflowX: "auto",
         }}
       >
         <Grid 
@@ -221,6 +241,7 @@ const EventDetails = () => {
             },
           }}
         >
+          {/* THE DATA GRID OR SIMPLY THE TABLE. */}
           <Grid item xs={6}>
             {rows && (
               <DataGrid
@@ -243,6 +264,8 @@ const EventDetails = () => {
               />
             )}
           </Grid>
+
+          {/* THE LINE CHART CORRESPONDING TO THE DATA GRID ATTENDEES COLUMN */}
           <Grid item xs={6} sx={{ display: 'flex', overflowX: "auto", }}>
             {intervalList && attendeesList && (
               <PerfectScrollbar sx={{ width: "100%", height: "100%" }}>
@@ -261,6 +284,8 @@ const EventDetails = () => {
                       // showMark: false,
                       data: attendeesList,
                     },
+                    
+                    /* Compliance Limit Line */
                     {
                       id: "compliance",
                       label: "Compliance Limit",

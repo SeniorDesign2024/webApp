@@ -20,13 +20,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Alert } from "@mui/material";
 
 export default function CreateEvent() {
-  const navigate = useNavigate();
-  const [errors, setErrors] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [lightChecked, setLightChecked] = useState(true);
-  const [busyChecked, setBusyChecked] = useState(false);
+  /* Variables */
+  const navigate = useNavigate();                           /* React Hook that navigates to appropriate pages as per the route provided. */
+  const [errors, setErrors] = useState(null);               /* Stores all the errors thrown by the page if any.                          */
+  const [startTime, setStartTime] = useState(null);         /* Stores a Date Object of the start time from the date time picker.         */
+  const [endTime, setEndTime] = useState(null);             /* Stores a Date Object of the end time from the date time picker.           */
+  const [lightChecked, setLightChecked] = useState(true);   /* Store true or false based on if the light checkbox is checked or not.     */
+  const [busyChecked, setBusyChecked] = useState(false);    /* Store true or false based on if the busy checkbox is checked or not.      */
 
+  /**
+   * Handles Create Event Form submission and creates a new event using data from the form.
+   * @param {*} event 
+   */
   const handleSubmit = (event) => {
     try {
       // Getting data from the create event form
@@ -102,6 +107,8 @@ export default function CreateEvent() {
     >
       <CssBaseline />
       <Navbar />
+
+      {/* PAGE TITLE */}
       <Grid container>
         <Grid item xs={6} sx={{ px: 1, py: 1 }}>
           <Typography
@@ -119,6 +126,8 @@ export default function CreateEvent() {
           </Typography>
         </Grid>
       </Grid>
+
+      {/* CREATE EVENT FORM */}
       <Box
         sx={{
           py: 2,
@@ -152,6 +161,8 @@ export default function CreateEvent() {
               },
             }}
           />
+
+          {/* CROWD DENSITY CHECKBOXES */}
           <Grid container>
             <Grid item xs={6} sx={{ px: 1, py: 1}}>
               <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
@@ -203,9 +214,10 @@ export default function CreateEvent() {
             </FormGroup>
             </Grid>
           </Grid>
+
+          {/* DATE TIME PICKER */}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
-              // required
               id="startTime"
               name="startTime"
               label="Start Time"
@@ -220,10 +232,8 @@ export default function CreateEvent() {
                 },
               }}
             />
-          </LocalizationProvider>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+
             <DateTimePicker
-              // required
               id="endTime"
               name="endTime"
               label="End Time"
