@@ -16,10 +16,15 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 export default function MyEvents() {
-  const [events, setEvents] = useState([]);
-  const [dataReceived, setDataReceived] = useState(false);
-  const navigate = useNavigate();
+  /* Variables and State Variable declarations */
+  const [events, setEvents] = useState([]);                 /* Stores the list of Events */
+  const [dataReceived, setDataReceived] = useState(false);  /* Use for useEffect dependency to know if the data has been correctly received. */
+  const navigate = useNavigate();                           /* Navigates to other pages at routes defined in App.js */
 
+  /**
+   * Fetches the event list from the background.
+   * @returns nothing!!
+   */
   async function fetchList() {
     const response = await fetch(`/api/event/list-events`, {
       method: "GET",
@@ -35,6 +40,7 @@ export default function MyEvents() {
     }
   }
 
+  /* Call the fetchList function on first render! */
   useEffect(() => {
     fetchList().then((data) => {
       for (let i = 0; i < data.data.length; i++) {
@@ -45,6 +51,9 @@ export default function MyEvents() {
     });
   }, [dataReceived]);
 
+  /**
+   * Function for the refresh button, calls the fetch list function!
+   */
   const handleRefresh = () => {
     fetchList().then((data) => {
       console.log(data);
@@ -56,6 +65,13 @@ export default function MyEvents() {
     });
   };
 
+  /**
+   * Formats the date
+   * @param {int} date 
+   * @param {int} month 
+   * @param {int} year 
+   * @returns a formatted string containing the full date
+   */
   const formatDate = (date, month, year) => {
     // Formatting Date
     const months = [
@@ -92,6 +108,7 @@ export default function MyEvents() {
       <CssBaseline />
       <Navbar />
       <Grid container>
+        {/* PAGE TITLE */}
         <Grid item xs={6} sx={{ px: 1, py: 1}}>
           <Typography
             component="h1"
@@ -107,7 +124,10 @@ export default function MyEvents() {
             List of all your upcoming events!
           </Typography>
         </Grid>
+
+        {/* PAGE BUTTONS */}
         <Grid item xs={6} sx={{ pl: 28, display: "flex", alignItems: "center" }}>
+          {/* CREATE EVENT BUTTON */}
           <Box sx={{ ml: 'auto', display: 'flex', gap: 2 }}>
             <Button
               variant="outlined"
@@ -133,6 +153,7 @@ export default function MyEvents() {
               Create Event
             </Button>
 
+            {/* REFRESH BUTTON */}
             <Button
               variant="outlined"
               onClick={() => handleRefresh()}
@@ -158,6 +179,8 @@ export default function MyEvents() {
           </Box>
         </Grid>
       </Grid>
+
+      {/* EVENT LIST */}
       <Box
         sx={{
           marginTop: 2,
@@ -209,6 +232,7 @@ export default function MyEvents() {
               </List>
             );
           }) : (
+            /* Display a message if the event list is empty */
             <Typography
               component="h1"
               variant="h5"
