@@ -9,36 +9,56 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "../logo2.png";
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+import { useState } from 'react';
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-
-    fetch(`/api/auth/signup`, {
-      method: "POST",
-      headers: {'Content-Type': 'application/json'},
-      credentials: "include",
-      body: JSON.stringify({
-        "username": data.get('username'),
-        "email": data.get("email"),
-        "password": data.get("password")
-      })
-    })
-    .then(response => {
-      if (response.ok) {
-        navigate("/");
-      } else {
-        console.log("Unable to sign up!");
+    try {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      
+      if (!data.get('username')) {
+        throw new Error("A username is required!");
       }
-    })
+
+      if (!data.get('email')) {
+        throw new Error("An email is required!");
+      }
+
+      if (!data.get('password')) {
+        throw new Error ("A password is required!");
+      }
+  
+      fetch(`/api/auth/signup`, {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'},
+        credentials: "include",
+        body: JSON.stringify({
+          "username": data.get('username'),
+          "email": data.get("email"),
+          "password": data.get("password")
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          setError(null);
+          navigate("/");
+        } else {
+          return response.json().then(errorData => {
+            throw new Error(errorData.message || "An unknown error occured!");
+          })
+        }
+      })
+      .catch(err => {
+        setError(err);
+      })
+    } catch (err) {
+      setError(err);
+    }
   };
 
   return (
@@ -80,6 +100,11 @@ export default function SignUp() {
         >
           Sign up
         </Typography>
+        {error && (
+          <Alert severity='error' onClose={() => setError(null)} sx={{ width: '100%' }}>
+            {error.message}
+          </Alert>
+        )}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -91,6 +116,13 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                    },
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -101,6 +133,13 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                    },
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -111,6 +150,13 @@ export default function SignUp() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                    },
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -121,6 +167,13 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                    },
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -132,6 +185,13 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#3A0CA3', // Use the same color as the Sign In button's background
+                    },
+                  },
+                }}
               />
             </Grid>
           </Grid>
@@ -155,7 +215,17 @@ export default function SignUp() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="/" variant="body2" sx={{ fontFamily: "Open Sans" }}>
+              <Link 
+                href="/" 
+                variant="body2"
+                sx={{
+                  fontFamily: "Open Sans",
+                  color: '#3A0CA3',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  }
+                }}
+              >
                 Already have an account? Sign in
               </Link>
             </Grid>
