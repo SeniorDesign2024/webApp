@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying founders' names
+ * @return {JSX.Element} JSX element representing the founders' names
+ */
 const FoundersList = () => {
   return (
     <div>

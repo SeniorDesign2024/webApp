@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying project details
+ * @return {JSX.Element} JSX element representing the project details
+ */
 const ProjectDetails = () => {
   return (
     <div>

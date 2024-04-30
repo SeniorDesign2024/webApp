@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying technology/methodology details
+ * @return {JSX.Element} JSX element representing the technology/methodology details
+ */
 const TechnologyMethodology = () => {
   return (
     <div>

@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying key features
+ * @return {JSX.Element} JSX element representing the key features
+ */
 const FeaturesList = () => {
   return (
     <div>

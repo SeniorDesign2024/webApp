@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying contact information
+ * @return {JSX.Element} JSX element representing the contact information
+ */
 const ContactInfo = () => {
   return (
     <div>

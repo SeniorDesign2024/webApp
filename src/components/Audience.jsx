@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying information targeted at the audience
+ * @return {JSX.Element} JSX element representing the audience information
+ */
 const Audience = () => {
   return (
     <div>

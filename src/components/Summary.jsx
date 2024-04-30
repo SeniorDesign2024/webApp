@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Component for displaying a summary
+ * @return {JSX.Element} JSX element representing the summary
+ */
 const Summary = () => {
   return (
     <div>
