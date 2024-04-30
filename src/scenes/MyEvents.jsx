@@ -15,6 +15,10 @@ import { TbRefresh } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
+/**
+ * Component for rendering the My Events page, displaying a list of upcoming events.
+ * @returns {JSX.Element} MyEvents component
+ */
 export default function MyEvents() {
   /* Variables and State Variable declarations */
   const [events, setEvents] = useState([]);                 /* Stores the list of Events */

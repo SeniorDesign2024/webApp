@@ -6,6 +6,14 @@ import { TbLogout } from "react-icons/tb";
 import { useNavigate, useLocation } from "react-router-dom"
 import logo from "../logo2.png";
 
+/**
+ * Component for rendering the application navbar.
+ * @param {Object} props - Props passed to the Navbar component
+ * @param {boolean} props.isTopOfPage - Indicates if the navbar is at the top of the page
+ * @param {string} props.selectedPage - Indicates the currently selected page
+ * @param {function} props.setSelectedPage - Function to set the selected page
+ * @returns {JSX.Element} Navbar component
+ */
 const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }) => {
   /* Variables */
   const navigate = useNavigate();      /* Navigates to appropriate pages as per the route provided */

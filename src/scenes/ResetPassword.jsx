@@ -10,10 +10,14 @@ import Container from "@mui/material/Container";
 import logo from "../logo2.png";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Component for rendering the reset password page.
+ * @returns {JSX.Element} ResetPassword component
+ */
 const ResetPassword = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();                          /* React Hook that navigates to appropriate pages as per the route provided. */
   const [resetError, setResetError] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});                /* Stores all the errors thrown by the page if any. */
 
   const handleSubmit = (event) => {
   try {
@@ -37,6 +41,7 @@ const ResetPassword = () => {
       return;
     }
 
+    // API call to update the password using values from the form.
     fetch(`/api/auth/reset-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },

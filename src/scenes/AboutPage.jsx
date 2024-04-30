@@ -11,6 +11,10 @@ import ImageSection from "../components/ImageSection";
 import ContactInfo from "../components/ContactInfo";
 import logo from "../logo2.png";
 
+/**
+ * Component for rendering the About page
+ * @returns {JSX.Element} AboutPage component
+ */
 const AboutPage = () => {
   return (
     <Box

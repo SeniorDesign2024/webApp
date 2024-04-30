@@ -10,10 +10,14 @@ import Container from "@mui/material/Container";
 import logo from "../logo2.png";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Component for the header of the Update User page
+ * @return {JSX.Element} JSX element representing the header of the Update User page
+ */
 const UpdateUser = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();                          /* React Hook that navigates to appropriate pages as per the route provided. */
   const [updateError, setUpdateError] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});                /* Stores all the errors thrown by the page if any. */
 
   const handleSubmit = (event) => {
   try {
@@ -40,6 +44,7 @@ const UpdateUser = () => {
       return;
     }
 
+    // API call to update a user using values from the form.
     fetch(`/api/user/update-user`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-access-token": sessionStorage.getItem("accessToken") },

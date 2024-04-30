@@ -12,6 +12,10 @@ import { TbEdit } from "react-icons/tb";
 import TextField from "@mui/material/TextField";
 import { Alert } from "@mui/material";
 
+/**
+ * Component for rendering user details and managing user information.
+ * @returns {JSX.Element} UserDetails component
+ */
 const UserDetails = () => {
   /* State Variables */
   const [userData, setUserData] = useState(null);                         /* Stores the user data returned by the API       */

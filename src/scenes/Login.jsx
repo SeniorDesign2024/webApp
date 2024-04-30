@@ -12,7 +12,10 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import { useState } from 'react';
 
-
+/**
+ * Component for rendering the sign-in page.
+ * @returns {JSX.Element} SignIn component
+ */
 export default function SignIn() {
   // variables and state variable declarations
   const navigate = useNavigate();

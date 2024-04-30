@@ -12,6 +12,10 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import { useState } from 'react';
 
+/**
+ * Component for rendering the sign-up page.
+ * @returns {JSX.Element} SignUp component
+ */
 export default function SignUp() {
   /* Variables */
   const navigate = useNavigate();             /* Navigates to appropriate pages as per the route provided */

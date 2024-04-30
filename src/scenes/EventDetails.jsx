@@ -11,6 +11,10 @@ import Navbar from "./Navbar";
 import io from 'socket.io-client';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
+/**
+ * Component for rendering the details of a specific event.
+ * @returns {JSX.Element} EventDetails component
+ */
 const EventDetails = () => {
   /* Variables */
   const eventId = useParams();                              /* Event Id. Pulled from the parameters passed in.            */
