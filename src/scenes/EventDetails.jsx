@@ -352,7 +352,7 @@ const EventDetails = () => {
                       id: "attendance",
                       label: "Attendees",
                       color: "#FF7F50",
-                      // showMark: false,
+                      showMark: false,
                       data: attendeesList,
                     },
                     
