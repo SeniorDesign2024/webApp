@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "./Navbar";
 import io from 'socket.io-client';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import Button from "@mui/material/Button";
 
 /**
  * Component for rendering the details of a specific event.
@@ -186,6 +187,14 @@ const EventDetails = () => {
     });
   }
 
+  function changeCrowdDensity(crowdDensity) {
+    if (crowdDensity === "sparse") {
+      socket.emit('crowdDensity', { eventId: eventId.toString(), density: 'sparse' })
+    } else if (crowdDensity === "dense") {
+      socket.emit('crowdDensity', { eventId: eventId.toString(), density: 'dense' })
+    }
+  }
+
   return (
     <Container
       component="main"
@@ -210,22 +219,76 @@ const EventDetails = () => {
         </Typography>
       </Box>
       <Grid container>
-        <Grid item xs={6} sx={{ px: 1, py: 1}}>
+        <Grid item xs={4} sx={{ px: 1, py: 1}}>
           <Typography sx={{ my: 1, fontFamily: "Open Sans" }}>
-            Event Name: {eventData.name}
+            <strong>Event Name:</strong> {eventData.name}
           </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
-            Compliance Limit: {eventData.complianceLimit}
+            <strong>Compliance Limit:</strong> {eventData.complianceLimit}
           </Typography>
         </Grid>
-        <Grid item xs={6} sx={{ px: 1, py: 1 }}>
+        <Grid item xs={4} sx={{ px: 1, py: 1 }}>
           <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
-            Start Time: {new Date(eventData.startTime).toLocaleTimeString()}
+            <strong>Start Time:</strong> {new Date(eventData.startTime).toLocaleTimeString()}
           </Typography>
           <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
-            End Time: {new Date(eventData.endTime).toLocaleTimeString()}
+            <strong>End Time:</strong> {new Date(eventData.endTime).toLocaleTimeString()}
           </Typography>
         </Grid>
+        <Grid item xs={4} sx={{ display: "flex", alignItems: "center", ml: 'auto' }} >
+          <Typography sx={{ my: 1, fontFamily: "Open Sans"}}>
+            <strong>Crowd Density:</strong>
+          </Typography>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              changeCrowdDensity("sparse");
+            }}
+            sx={{
+              mx: 1,
+              minWidth: 'auto',
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              color: "#3A0CA3",
+              border: "2px solid #3A0CA3",
+              borderRadius: 2,
+              padding: "10px",
+              fontFamily: "Open Sans",
+              ":hover": {
+                border: "2px solid #3A0CA3",
+                backgroundColor: "rgba(58,12,163, 0.04)"
+              }
+            }}
+          >
+            Lightly Crowded
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              changeCrowdDensity("dense");
+            }}
+            sx={{
+              mx: 1,
+              minWidth: 'auto',
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              color: "#3A0CA3",
+              border: "2px solid #3A0CA3",
+              borderRadius: 2,
+              padding: "10px",
+              fontFamily: "Open Sans",
+              ":hover": {
+                border: "2px solid #3A0CA3",
+                backgroundColor: "rgba(58,12,163, 0.04)"
+              }
+            }}
+          >
+            Tightly Packed
+          </Button>
+        </Grid>
+        
       </Grid>
 
       <Box
@@ -270,7 +333,7 @@ const EventDetails = () => {
           </Grid>
 
           {/* THE LINE CHART CORRESPONDING TO THE DATA GRID ATTENDEES COLUMN */}
-          <Grid item xs={6} sx={{ display: 'flex', overflowX: "auto", }}>
+          <Grid item xs={6} sx={{ display: 'flex' }}>
             {intervalList && attendeesList && (
               <PerfectScrollbar sx={{ width: "100%", height: "100%" }}>
                 <LineChart
@@ -280,6 +343,10 @@ const EventDetails = () => {
                       data: intervalList,
                     }
                   ]}
+                  yAxis={[{
+                    min: 0,
+                    max: Math.max(...attendeesList) + 5
+                  }]}
                   series={[
                     {
                       id: "attendance",
