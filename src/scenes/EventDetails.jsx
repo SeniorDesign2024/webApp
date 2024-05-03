@@ -189,9 +189,9 @@ const EventDetails = () => {
 
   function changeCrowdDensity(crowdDensity) {
     if (crowdDensity === "sparse") {
-      socket.emit('crowdDensity', { eventId: eventId.toString(), density: 'sparse' })
+      socket.emit('crowdDensity', { eventId: eventId.eventId, density: 'sparse' })
     } else if (crowdDensity === "dense") {
-      socket.emit('crowdDensity', { eventId: eventId.toString(), density: 'dense' })
+      socket.emit('crowdDensity', { eventId: eventId.eventId, density: 'dense' })
     }
   }
 
